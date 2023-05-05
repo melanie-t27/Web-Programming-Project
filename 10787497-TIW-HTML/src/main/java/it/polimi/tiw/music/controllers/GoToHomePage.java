@@ -2,10 +2,11 @@ package it.polimi.tiw.music.controllers;
 
 import java.io.*;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.*;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import org.thymeleaf.TemplateEngine;
@@ -15,8 +16,9 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import it.polimi.tiw.music.beans.*;
 import it.polimi.tiw.music.beans.User;
+import it.polimi.tiw.music.dao.PlaylistDAO;
+import it.polimi.tiw.music.dao.SongDAO;
 
-@WebServlet("/goToHomePage")
 public class GoToHomePage extends HttpServlet {
 	private static final long serialVersionUID = 2L;
 	private Connection connection = null;
@@ -52,13 +54,28 @@ public class GoToHomePage extends HttpServlet {
 			response.sendRedirect(path);
 		}
 		else {
-			//PlaylistDAO 
-			//List<Post> posts;
+			List<String> genres = Arrays.asList("Pop", "Indie", "Rock", "Metal");
+			PlaylistDAO playlistDAO = new PlaylistDAO(connection);
+			SongDAO songDAO = new SongDAO(connection);
+			List<Playlist> playlist = new ArrayList<>();
+			List<Song> songs = new ArrayList<>();
 			String username = ((User) session.getAttribute("currentUser")).getUsername();
+			
+			try {
+				playlist = playlistDAO.findPlaylistsByUsername(username);
+				songs = songDAO.findAllSongsByUsername(username);
+			} catch(Exception e) {
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error in retrieving datas from the database");
+				return;
+			}
 			
 			String path = "/WEB-INF/HomePage.html";
 			ServletContext servletContext = getServletContext();
 			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+			
+			ctx.setVariable("playlists", playlist);
+			ctx.setVariable("songs", songs);
+			ctx.setVariable("genres", genres);
 			templateEngine.process(path, ctx, response.getWriter());
 			
 		}

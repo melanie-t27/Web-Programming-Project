@@ -24,6 +24,32 @@
     <welcome-file>loginPage.html</welcome-file>
   </welcome-file-list>
   
-  
+ 
+	<servlet>
+		<servlet-name> Login </servlet-name> 
+		<servlet-class> it.polimi.tiw.music.controllers.Login </servlet-class>
+     </servlet>
+     <servlet-mapping>
+           <servlet-name> Login </servlet-name>
+           <url-pattern> /Login </url-pattern>
+     </servlet-mapping>
+     
+     <servlet>
+		<servlet-name> GoToHomePage </servlet-name> 
+		<servlet-class> it.polimi.tiw.music.controllers.GoToHomePage </servlet-class>
+     </servlet>
+     <servlet-mapping>
+           <servlet-name> GoToHomePage </servlet-name>
+           <url-pattern> /goToHomePage </url-pattern>
+     </servlet-mapping>
+     
+     <servlet>
+		<servlet-name> CreateSong </servlet-name> 
+		<servlet-class> it.polimi.tiw.music.controllers.CreateSong </servlet-class>
+     </servlet>
+     <servlet-mapping>
+           <servlet-name> CreateSong </servlet-name>
+           <url-pattern> /createSong </url-pattern>
+     </servlet-mapping>
 	
 </web-app>

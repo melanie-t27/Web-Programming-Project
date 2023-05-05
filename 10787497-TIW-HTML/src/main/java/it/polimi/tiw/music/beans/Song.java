@@ -5,7 +5,7 @@ public class Song {
 	private String title;
 	private String genre;
 	private String file;
-	private User user;
+	private String user;
 	private Album album;
 	
 
@@ -41,11 +41,11 @@ public class Song {
 		this.file = file;
 	}
 
-	public User getUser() {
+	public String getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(String user) {
 		this.user = user;
 	}
 

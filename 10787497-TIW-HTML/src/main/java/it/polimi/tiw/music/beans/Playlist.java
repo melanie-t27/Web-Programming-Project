@@ -5,7 +5,7 @@ import java.util.Date;
 public class Playlist {
 	private int id;
 	private String name;
-	private User user;
+	private String user;
 	private Date date;
 	
 
@@ -25,11 +25,11 @@ public class Playlist {
 		this.name = name;
 	}
 
-	public User getUser() {
+	public String getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(String user) {
 		this.user = user;
 	}
 

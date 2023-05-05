@@ -6,6 +6,7 @@ public class Album {
 	private String artist;
 	private int year;
 	private String cover;
+	private String user;
 	
 
 	public int getId() {
@@ -47,6 +48,13 @@ public class Album {
 	public void setCover(String cover) {
 		this.cover = cover;
 	}
-	
+
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
+	}
 	
 }

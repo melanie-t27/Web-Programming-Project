@@ -26,11 +26,11 @@ public class PlaylistDAO {
 			pstatement.setString(1, username);
 			result = pstatement.executeQuery();
 			while (result.next()) {
-				result.getString("idUser");
 				Playlist np = new Playlist();
 				np.setId(result.getInt("idPlaylist"));
 				np.setName(result.getString("name"));
 				np.setDate(result.getDate("creationDate"));
+				np.setUser(username);
 				playlists.add(np);
 			}
 		} catch (SQLException e) {
@@ -56,7 +56,7 @@ public class PlaylistDAO {
 		String query1 = "INSERT into Playlist (idUser, name, creationDate) VALUES(?, ?, ?)";
 		String query2 = "INSERT into InPlaylist (playlist, song) VALUES(?, ?)";
 		String query3 = "SELECT LAST_INSERT_ID() FROM Playlist";
-		PreparedStatement pstatement = null;
+		PreparedStatement pstatement1 = null, pstatement2 = null;
 		Statement statement = null;
 		ResultSet result = null;
 		
@@ -64,11 +64,12 @@ public class PlaylistDAO {
 		int idPlaylist = 0;
 		
 		try {
-			pstatement = con.prepareStatement(query1);
-			pstatement.setString(1, username);
-			pstatement.setString(2, namePlaylist);
-			pstatement.setDate(3, (java.sql.Date) date);
-			code = pstatement.executeUpdate();
+			con.setAutoCommit(false);
+			pstatement1 = con.prepareStatement(query1);
+			pstatement1.setString(1, username);
+			pstatement1.setString(2, namePlaylist);
+			pstatement1.setDate(3, (java.sql.Date) date);
+			code = pstatement1.executeUpdate();
 			
 			statement = con.createStatement();
 			result = statement.executeQuery(query3);
@@ -76,25 +77,31 @@ public class PlaylistDAO {
 				idPlaylist = result.getInt("idPlaylist");
 			}
 			
+			pstatement2 = con.prepareStatement(query2);
 			for(Integer song: songs) {
-				pstatement = con.prepareStatement(query2);
-				pstatement.setInt(1, idPlaylist);
-				pstatement.setInt(2, song);
-				pstatement.executeUpdate();
+				pstatement2.setInt(1, idPlaylist);
+				pstatement2.setInt(2, song);
+				pstatement2.executeUpdate();
 			}
-			
+			con.commit();
 			
 		} catch (SQLException e) {
-		    e.printStackTrace();
+			con.rollback(); //riporta tutto allo stato precedente
 			throw new SQLException(e);
 		} finally {
+			con.setAutoCommit(true);
 			try {
-				pstatement.close();
+				result.close();
 			} catch (Exception e1) {}
-		}
+			try {
+				pstatement1.close();
+				pstatement2.close();
+				statement.close();
+			} catch (Exception e2) { //errore che la playlist non è stata creata 
+				}
+			}
 		return code;
 	}
-	
 	
 	
 }
