@@ -90,7 +90,7 @@ public class CreateSong extends HttpServlet{
 			try {
 				songDAO.createSong(username, titleSong, genre, audio, titleAlbum, artist, year, cover);
 			} catch(Exception e) {
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error in creating song from the database");
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error in creating song in the database");
 				return;
 			}
 			

@@ -140,7 +140,7 @@ public class SongDAO {
 	
 	public List<Song> findAllSongsInPlaylist(String username, int idPlaylist) throws SQLException {
 		List<Song> songs = new ArrayList<>();
-		String query = "SELECT * FROM (Song JOIN InPlaylist ON Song.idSong = InPlaylist.song) JOIN Album ON Song.user = Album.userId and Album.idAlbum = Song.album WHERE Song.user = ? and InPlaylist.playlist = ?";
+		String query = "SELECT * FROM (Song JOIN InPlaylist ON Song.idSong = InPlaylist.song) JOIN Album ON Song.user = Album.userId and Album.idAlbum = Song.album WHERE Song.user = ? and InPlaylist.playlist = ? ORDER BY Album.year desc";
 		ResultSet result = null;
 		PreparedStatement pstatement = null;
 		
@@ -172,7 +172,6 @@ public class SongDAO {
 				
 				songs.add(sg);
 			}
-			
 			
 		} catch (SQLException e) {
 			throw new SQLException(e);

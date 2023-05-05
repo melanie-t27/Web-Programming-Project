@@ -15,21 +15,18 @@
 	</ul>
 	
 	<h2>Create a new playlist:</h2>
-	<form>
+	<form action="/createPlaylist" method="POST">
 		<input type="text" name="title" placeholder="Name of the playlist" required/><br>
 		<p th:if="${songs.size() == 0 || songs == null}">There aren't any song available, please add a song before creating a playlist.</p>
 		<p th:if="${songs.size() > 0}">Choose one or more song in order to create your new playlist:</p>
 		<br>
 		<th:block th:each="song : ${songs}">
-     	 	<input type="checkbox" id="song" th:name="${song.id}" checked>
-     	 	<label for="song" th:inline="text"></label>
+     	 	<input type="checkbox" id="selectedSong" name="selectedSong" value="${song.id}" checked required>
+     	 	<label for="selectedSong" th:inline="text"></label>
+     	 	<br>
    	    </th:block>
 		<button type="submit">Submit playlist</button>
 	</form>
-		
-	
-	
-	
 	
 	
 	<h2>Add a new song:</h2>

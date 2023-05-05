@@ -34,7 +34,6 @@ public class PlaylistDAO {
 				playlists.add(np);
 			}
 		} catch (SQLException e) {
-		    e.printStackTrace();
 			throw new SQLException(e);
 
 		} finally {
@@ -52,7 +51,7 @@ public class PlaylistDAO {
 		return playlists;
 	}
 	
-	public int createPlaylist(String username, String namePlaylist, Date date, List<Integer> songs) throws SQLException {
+	public int createPlaylist(String username, String namePlaylist, Date date, int[] songs) throws SQLException {
 		String query1 = "INSERT into Playlist (idUser, name, creationDate) VALUES(?, ?, ?)";
 		String query2 = "INSERT into InPlaylist (playlist, song) VALUES(?, ?)";
 		String query3 = "SELECT LAST_INSERT_ID() FROM Playlist";
@@ -78,7 +77,7 @@ public class PlaylistDAO {
 			}
 			
 			pstatement2 = con.prepareStatement(query2);
-			for(Integer song: songs) {
+			for(int song: songs) {
 				pstatement2.setInt(1, idPlaylist);
 				pstatement2.setInt(2, song);
 				pstatement2.executeUpdate();
@@ -103,5 +102,38 @@ public class PlaylistDAO {
 		return code;
 	}
 	
+	public Playlist getPlaylistById(String username, int idPlaylist) throws SQLException {
+		String query = "SELECT title FROM Playlist WHERE idUser = ? and idPlaylist = ?";
+		ResultSet result = null;
+		PreparedStatement pstatement = null;
+		Playlist np = new Playlist();
+		try {
+			pstatement = con.prepareStatement(query);
+			pstatement.setString(1, username);
+			pstatement.setInt(2, idPlaylist);
+			result = pstatement.executeQuery();
+			if (result.next()) {
+				np.setId(result.getInt("idPlaylist"));
+				np.setName(result.getString("name"));
+				np.setDate(result.getDate("creationDate"));
+				np.setUser(username);
+			} 
+		} catch (SQLException e) {
+			throw new SQLException(e);
+
+		} finally {
+			try {
+				result.close();
+			} catch (Exception e1) {
+				throw new SQLException(e1);
+			}
+			try {
+				pstatement.close();
+			} catch (Exception e2) {
+				throw new SQLException(e2);
+			}
+		}
+		return np;
+	}
 	
 }
