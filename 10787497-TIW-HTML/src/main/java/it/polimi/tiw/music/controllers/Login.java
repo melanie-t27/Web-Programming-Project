@@ -45,6 +45,8 @@ public class Login extends HttpServlet{
 		String username = request.getParameter("username");
 	    String password = request.getParameter("password");
 	    User user = null;
+	    System.out.println("username: "+username);
+	    System.out.println("password: "+password);
 	    
 	    if (username == null || password == null) {
 			response.sendError(505, "Parameters incomplete");

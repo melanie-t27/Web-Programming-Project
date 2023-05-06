@@ -55,17 +55,19 @@ public class CreatePlaylist extends HttpServlet{
 			response.sendRedirect(path);
 		} else {
 			String username = ((User) session.getAttribute("currentUser")).getUsername();
-			String titlePlaylist = (String) session.getAttribute("title");
-			int[] idSongs = (int[]) session.getAttribute("selectedSong");
+			String titlePlaylist = (String) request.getParameter("titlePlaylist");
+			String idSongs = (String) request.getParameter("selectedSong");
 			
-			if(titlePlaylist == null || idSongs == null || idSongs.length == 0) {
-				response.sendError(505, "Parameters incomplete");
-				return;
+			System.out.println("Titolo:"+titlePlaylist);
+			System.out.println("id Songs: " + idSongs);
+			if(titlePlaylist == null || idSongs == null /*|| idSongs.length == 0*/) {
+				//response.sendError(505, "Parameters incomplete");
+				//return;
 			}
 			
 			PlaylistDAO playlistDAO = new PlaylistDAO(connection);
 			try {
-				playlistDAO.createPlaylist(username, titlePlaylist, null, idSongs);
+				//playlistDAO.createPlaylist(username, titlePlaylist, null, idSongs);
 			} catch(Exception e) {
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error in creating playlist in the database");
 				return;

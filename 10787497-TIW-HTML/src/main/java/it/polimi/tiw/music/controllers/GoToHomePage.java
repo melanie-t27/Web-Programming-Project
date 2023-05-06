@@ -54,7 +54,7 @@ public class GoToHomePage extends HttpServlet {
 			response.sendRedirect(path);
 		}
 		else {
-			List<String> genres = Arrays.asList("Pop", "Indie", "Rock", "Metal");
+			List<String> genres = Arrays.asList("Pop", "Indie", "Rock", "Alternative", "R&B");
 			PlaylistDAO playlistDAO = new PlaylistDAO(connection);
 			SongDAO songDAO = new SongDAO(connection);
 			List<Playlist> playlist = new ArrayList<>();

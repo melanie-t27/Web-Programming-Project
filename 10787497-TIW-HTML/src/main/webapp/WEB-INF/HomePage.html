@@ -11,10 +11,6 @@
 	<div th:if="${playlists.size > 0}">Here are your playlists from the most to the least recently created.</div>
 	
 	<ul th:each="playlist : ${playlists}">
-		<li th:text="${playlist.name}" th:href="@{/goToPlaylistPage}">Playlist</li>
-	</ul>
-	
-	<ul th:each="playlist : ${playlists}">
   		<li>
   			<a th:href="@{/goToPlaylistPage(idPlaylist=${playlist.id})}">
   				<span th:text="${playlist.name}">Playlist</span>
@@ -27,14 +23,14 @@
 	</ul>
 	
 	<h2>Create a new playlist:</h2>
-	<form th:action="@{/createPlaylist}" method="POST">
-		<input type="text" name="title" placeholder="Name of the playlist" required/><br>
+	<form action="#" th:action="@{/createPlaylist}" method="POST">
+		<input type="text" name="titlePlaylist" placeholder="Name of the playlist" required/><br>
 		<p th:if="${songs.size() == 0 || songs == null}">There aren't any song available, please add a song before creating a playlist.</p>
 		<p th:if="${songs.size() > 0}">Choose one or more song in order to create your new playlist:</p>
 		<br>
 		<th:block th:each="song : ${songs}">
-     	 	<input type="checkbox" id="selectedSong" name="selectedSong" value="${song.id}" checked required>
-     	 	<label for="selectedSong" th:inline="text"></label>
+     	 	<input type="checkbox" id="selectedSong" name="selectedSong" th:value="${song.id}">
+     	 	<label for="selectedSong" th:text="|${song.title} - ${song.album.artist}, ${song.album.title}|"></label> 
      	 	<br>
    	    </th:block>
 		<button type="submit">Submit playlist</button>
@@ -42,18 +38,19 @@
 	
 	
 	<h2>Add a new song:</h2>
-	<form th:action="@{/createSong}" method="POST" enctype='multipart/form-data'>
-	    <input type="text" th:name="title" placeholder="Title" required/><br>
-	    <select th:name="genre" required>
+	<form action="#" th:action="@{/createSong}" method="POST" enctype='multipart/form-data'>
+	    <input type="text" name="title" placeholder="Title" required/><br>
+	    <select name="genre" required>
 	    	<option selected>Genre</option>
         	<option th:each="genre : ${genres}" th:value="${genre}" th:text="${genre}">Genre</option>
       	</select><br>
-      	<p>File audio of the song: </p><input type =file name="audio" placeholder="File Audio" required/><br>
-      	<input type="text" th:name="titleAlbum" placeholder="Album Title" required/><br>
-      	<input type="text" th:name="artist" placeholder="Artist" required/><br>
-      	<p>Cover of the album: </p><input type =file th:name="cover" placeholder="Cover" required/><br>
-      	<input type="number" th:name="year" placeholder="Year of Publication of the Album" min="1900" max="2099" step="1" required/><br>
+      	<p>File audio of the song: </p><input type =file name="audio" placeholder="File Audio" accept="audio/*" required/><br>
+      	<input type="text" name="titleAlbum" placeholder="Album Title" required/><br>
+      	<input type="text" name="artist" placeholder="Artist" required/><br>
+      	<p>Cover of the album: </p><input type =file name="cover" placeholder="Cover" accept="image/*" required/><br>
+      	<input type="text" name="year" placeholder="Year of Publication of the Album" required/><br>
 		<button type="submit">Submit song</button>
+		<!-- <p th:class = "submitResult" th:text="${errorNewSong}"> -->
 	</form>
 	
 </body>
