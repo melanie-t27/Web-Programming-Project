@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Music</title>
+</head>
+<body>
+	<h1 th:text="|Playlist di ${session.currentUser.name}|">HomePage</h1>
+	<h3 th:text="${currentPlaylist.name}">Playlist</h3>
+	<p th:text="|Created ${currentPlaylist.date}|">Created...</p>
+	<ul>
+		<th:block th:each="song : ${songsInPlaylist}">
+			<li th:text=""> Song </li>
+		</th:block>
+	</ul>
+	
+	<button >Previous</button>
+	<table>
+		<tr>
+			<th:block th:each="song : ${songsInPlaylist}">
+				<td>
+					<div>
+						<img width="100" src="data:image/jpeg;base64,${song.album.cover}"/><br>
+						<p th:text="${song.title}">Song Title</p><br>
+						<p th:text="|${song.album.artist}(${song.album.title}|">Artist (Album)</p>
+					</div>
+				</td>
+			</th:block>
+		</tr>
+	</table>
+	<button>Following</button>
+	
+	<h5 th:if="${songsNotInPlaylist.size > 0">Add another song to your playlist:</h5>
+	<form>
+		<select name="addSong" required>
+	    	<option selected>Your Song</option>
+        	<option th:each="song : songsNotInPlaylist" th:value="${song}" th:text="|${song.title}-${song.album.artist}(${song.album.title})|">Song</option>
+      	</select>
+      	<br>
+		<button type="submit">Submit Song</button>
+	</form>
+	
+
+</body>
+</html>
