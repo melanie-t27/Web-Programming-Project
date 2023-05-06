@@ -44,6 +44,15 @@
      </servlet-mapping>
      
      <servlet>
+		<servlet-name> GoToPlaylistPage </servlet-name> 
+		<servlet-class> it.polimi.tiw.music.controllers.GoToPlaylistPage </servlet-class>
+     </servlet>
+     <servlet-mapping>
+           <servlet-name> GoToPlaylistPage </servlet-name>
+           <url-pattern> /goToPlaylistPage </url-pattern>
+     </servlet-mapping>
+     
+     <servlet>
 		<servlet-name> CreateSong </servlet-name> 
 		<servlet-class> it.polimi.tiw.music.controllers.CreateSong </servlet-class>
      </servlet>
@@ -60,5 +69,7 @@
            <servlet-name> CreatePlaylist </servlet-name>
            <url-pattern> /createPlaylist </url-pattern>
      </servlet-mapping>
+     
+     
 	
 </web-app>

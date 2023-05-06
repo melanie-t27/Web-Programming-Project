@@ -62,7 +62,7 @@ public class GoToHomePage extends HttpServlet {
 			String username = ((User) session.getAttribute("currentUser")).getUsername();
 			
 			try {
-				playlist = playlistDAO.findPlaylistsByUsername(username);
+				playlist = playlistDAO.findPlaylists(username);
 				songs = songDAO.findAllSongsByUsername(username);
 			} catch(Exception e) {
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error in retrieving datas from the database");

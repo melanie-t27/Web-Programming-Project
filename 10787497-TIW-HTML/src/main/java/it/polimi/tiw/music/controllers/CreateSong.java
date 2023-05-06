@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.UnavailableException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +22,7 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 import it.polimi.tiw.music.beans.User;
 import it.polimi.tiw.music.dao.SongDAO;
 
+@MultipartConfig
 public class CreateSong extends HttpServlet{
 	private static final long serialVersionUID = 3L;
 	private Connection connection = null;
@@ -61,7 +63,14 @@ public class CreateSong extends HttpServlet{
 			String genre = (String) session.getAttribute("genre");
 			String titleAlbum = (String) session.getAttribute("titleAlbum");
 			String artist = (String) session.getAttribute("artist");
-			int year = (int) session.getAttribute("year");
+			String yearString = (String) session.getAttribute("year");
+			int year = -1;
+			
+			try {
+				year = Integer.parseInt(yearString);
+			} catch (NumberFormatException e) {
+				//error
+			}
 			
 			Part coverPart = request.getPart("cover");
 			InputStream cover = null;
@@ -88,8 +97,8 @@ public class CreateSong extends HttpServlet{
 			
 			SongDAO songDAO = new SongDAO(connection);
 			try {
-				songDAO.createSong(username, titleSong, genre, audio, titleAlbum, artist, year, cover);
-			} catch(Exception e) {
+				songDAO.createSongAlbum(username, titleSong, genre, audio, titleAlbum, artist, year, cover);
+			} catch(SQLException e) {
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error in creating song in the database");
 				return;
 			}

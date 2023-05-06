@@ -16,7 +16,7 @@ public class PlaylistDAO {
 		this.con = con;
 	}
 	
-	public List<Playlist> findPlaylistsByUsername(String username) throws SQLException {
+	public List<Playlist> findPlaylists(String username) throws SQLException {
 		List<Playlist> playlists = new ArrayList<>();
 		String query = "SELECT * FROM Playlist WHERE idUser = ? ORDER BY creationDate desc";
 		ResultSet result = null;
@@ -103,7 +103,7 @@ public class PlaylistDAO {
 	}
 	
 	public Playlist getPlaylistById(String username, int idPlaylist) throws SQLException {
-		String query = "SELECT title FROM Playlist WHERE idUser = ? and idPlaylist = ?";
+		String query = "SELECT * FROM Playlist WHERE idUser = ? and idPlaylist = ?";
 		ResultSet result = null;
 		PreparedStatement pstatement = null;
 		Playlist np = new Playlist();
