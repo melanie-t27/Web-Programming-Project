@@ -63,12 +63,21 @@
      </servlet-mapping>
      
      <servlet>
-		<servlet-name> GoToSongPage </servlet-name> 
-		<servlet-class> it.polimi.tiw.music.controllers.GoToSongPage </servlet-class>
+		<servlet-name> GoToPlayer </servlet-name> 
+		<servlet-class> it.polimi.tiw.music.controllers.GoToPlayer </servlet-class>
      </servlet>
      <servlet-mapping>
-           <servlet-name> GoToSongPage </servlet-name>
-           <url-pattern> /goToSongPage </url-pattern>
+           <servlet-name> GoToPlayer </servlet-name>
+           <url-pattern> /goToPlayer</url-pattern>
+     </servlet-mapping>
+     
+      <servlet>
+		<servlet-name> AddSongToPlaylist </servlet-name> 
+		<servlet-class> it.polimi.tiw.music.controllers.AddSongToPlaylist </servlet-class>
+     </servlet>
+     <servlet-mapping>
+           <servlet-name> AddSongToPlaylist </servlet-name>
+           <url-pattern> /addSongToPlaylist </url-pattern>
      </servlet-mapping>
      
      <servlet>

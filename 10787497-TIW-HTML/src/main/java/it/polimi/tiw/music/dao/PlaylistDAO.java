@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.*;
 
 import it.polimi.tiw.music.beans.*;
@@ -51,56 +50,107 @@ public class PlaylistDAO {
 		return playlists;
 	}
 	
-	public int createPlaylist(String username, String namePlaylist, Date date, int[] songs) throws SQLException {
-		String query1 = "INSERT into Playlist (idUser, name, creationDate) VALUES(?, ?, ?)";
-		String query2 = "INSERT into InPlaylist (playlist, song) VALUES(?, ?)";
-		String query3 = "SELECT LAST_INSERT_ID() FROM Playlist";
-		PreparedStatement pstatement1 = null, pstatement2 = null;
-		Statement statement = null;
-		ResultSet result = null;
-		
-		int code = 0;	
-		int idPlaylist = 0;
-		
+	public void createPlaylistWithSongs(String username, String namePlaylist, int[] songs) throws SQLException {
+		int idPlaylist = -1;
 		try {
 			con.setAutoCommit(false);
-			pstatement1 = con.prepareStatement(query1);
-			pstatement1.setString(1, username);
-			pstatement1.setString(2, namePlaylist);
-			pstatement1.setDate(3, (java.sql.Date) date);
-			code = pstatement1.executeUpdate();
+			idPlaylist = findPlaylistId(username, namePlaylist);
+			if(idPlaylist == -1) {
+				createPlaylist(username, namePlaylist);
+				idPlaylist = findPlaylistId(username, namePlaylist);
+				for(int song: songs) {
+					addSongInPlaylist(idPlaylist, song);
+				}
+			} 
 			
-			statement = con.createStatement();
-			result = statement.executeQuery(query3);
-			while(result.next()) {
-				idPlaylist = result.getInt("idPlaylist");
-			}
-			
-			pstatement2 = con.prepareStatement(query2);
-			for(int song: songs) {
-				pstatement2.setInt(1, idPlaylist);
-				pstatement2.setInt(2, song);
-				pstatement2.executeUpdate();
-			}
 			con.commit();
-			
 		} catch (SQLException e) {
+			con.setAutoCommit(true);
+			e.printStackTrace();
 			con.rollback(); //riporta tutto allo stato precedente
 			throw new SQLException(e);
 		} finally {
 			con.setAutoCommit(true);
+		}
+	}
+	
+	public void createPlaylist(String username, String namePlaylist) throws SQLException {
+		String query = "INSERT into Playlist (idUser, name) VALUES(?, ?)";
+		PreparedStatement pstatement = null;
+		
+		try {
+			pstatement = con.prepareStatement(query);
+			pstatement.setString(1, username);
+			pstatement.setString(2, namePlaylist);
+			pstatement.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new SQLException(e);
+		} finally {
+			try {
+				pstatement.close();
+			} catch (Exception e2) { 
+				e2.printStackTrace();//errore che la playlist non è stata creata 
+			}
+		}
+	}
+	
+	public void addSongInPlaylist(int idPlaylist, int idSong) throws SQLException {
+		String query = "INSERT into InPlaylist (playlist, song) VALUES(?, ?)";
+		PreparedStatement pstatement = null;	
+		try {
+			pstatement = con.prepareStatement(query);
+			pstatement.setInt(1, idPlaylist);
+			pstatement.setInt(2, idSong);
+			pstatement.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new SQLException(e);
+
+		} finally {
+			try {
+				pstatement.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				throw new SQLException(e2);
+			}
+		}
+	}
+	
+	
+	public int findPlaylistId(String username, String namePlaylist) throws SQLException {
+		int playlist = -1;
+		String query = "SELECT idPlaylist FROM Playlist WHERE idUser = ? and name = ?";
+		ResultSet result = null;
+		PreparedStatement pstatement = null;	
+		try {
+			pstatement = con.prepareStatement(query);
+			pstatement.setString(1, username);
+			pstatement.setString(2, namePlaylist);
+			result = pstatement.executeQuery();
+			if (result.next()) {
+				playlist = result.getInt("idPlaylist");
+			}
+		} catch (SQLException e) {
+			throw new SQLException(e);
+
+		} finally {
 			try {
 				result.close();
-			} catch (Exception e1) {}
-			try {
-				pstatement1.close();
-				pstatement2.close();
-				statement.close();
-			} catch (Exception e2) { //errore che la playlist non è stata creata 
-				}
+			} catch (Exception e1) {
+				throw new SQLException(e1);
 			}
-		return code;
+			try {
+				pstatement.close();
+			} catch (Exception e2) {
+				throw new SQLException(e2);
+			}
+		}
+		return playlist;
 	}
+	
 	
 	public Playlist getPlaylistById(String username, int idPlaylist) throws SQLException {
 		String query = "SELECT * FROM Playlist WHERE idUser = ? and idPlaylist = ?";

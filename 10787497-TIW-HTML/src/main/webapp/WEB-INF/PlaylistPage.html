@@ -12,14 +12,12 @@
 	<h3 th:text="${currentPlaylist.name}">Playlist</h3>
 	<p th:text="|Created ${currentPlaylist.date}|">Created...</p>
 	
-	<ul th:each="song : ${songsInPlaylist}">
-			<li th:text="|${song.title} - ${song.album.title}|"> Song </li>
-		
-	</ul>
-	
 	<p th:if="${songsInPlaylist == null || songsInPlaylist.size() == 0}"> This playlist doesn't have any songs yet.</p>
 	
-	<button >Previous</button>
+	<th:block th:if="${group > 1}">
+		<a th:href="@{/goToPlaylistPage(idPlaylist=${currentPlaylist.id},group=${group-1})}">Previous</a> 
+	</th:block>
+	
 	<table th:if="${songsInPlaylist.size() > 0}">
 		<tbody>
 			<tr>
@@ -27,7 +25,7 @@
 					<td>
 						<div>
 							<img width="100" th:src="${'data:image/jpeg;base64,'+ song.album.cover}"/><br> 
-							<a th:href="@{/goToSongPage(idSong=${song.id}, currentPlaylist=${currentPlaylist.id})}"><span th:text="${song.title}">Song</span></a>
+							<a th:href="@{/goToPlayer(idSong=${song.id}, currentPlaylist=${currentPlaylist.id})}"><span th:text="${song.title}">Song</span></a>
 							<br>
 							<!-- <p th:text="|${song.album.artist}(${song.album.title}|">Artist (Album)</p> -->
 						</div>
@@ -37,46 +35,35 @@
 			</tr>
 		</tbody>
 	</table>
-	<button>Following</button>
+	<th:block th:if="${next == true}">
+		<a th:href="@{/goToPlaylistPage(idPlaylist=${currentPlaylist.id},group=${group+1})}">Following</a> 
+	</th:block>
 	
-	
-	<!-- 
-	<table class=songsTable>
-			<tbody>
-				<tr>
-					<td th:each="s : ${songsInPlaylist}">
-						<table class=simpleTable>
-							<tbody>
-								<tr>
-									<td>
-										<img th:src="@{GetImage/{image}(image=${s.album.cover})}" />
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<a th:href="@{GoToSongPage(songId=${s.id} , playlistId=${playlist.id}"> 
-										<span th:text="${s.title}"></span>   </a> 
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</td>		
-				</tr>
-			</tbody>
-	</table>
-	
-	 
-	<h3 th:if="${songsNotInPlaylist.size() > 0}">Add another song to your playlist:</h3>
-	<form>
-		<select name="addSong" required>
+	<th:block th:if="${songsNotInPlaylist.size() > 0}">
+	<h3>Add another song to your playlist:</h3>
+	<form action="#" th:action="@{/addSongToPlaylist}" method="POST">
+		<input type="hidden" name="idPlaylist" th:value="${currentPlaylist.id}">
+		<select name="selectedSong" required>
 	    	<option selected>Your Song</option>
-	    	
-        	<option th:each="song : songsNotInPlaylist" th:value="${song.id}" th:text="|${song.title} from ${song.album.title}(${song.album.artist})|">Song</option>
+        	<option th:each="song : ${songsNotInPlaylist}" th:value="${song.id}" th:text="|${song.title} from ${song.album.title}(${song.album.artist})|">Song</option>
       	</select>
       	<br>
 		<button type="submit">Submit Song</button>
 	</form>
+	
+	<!--  
+	<form action="#" th:action="@{/addSongToPlaylist}" method="POST">
+		<th:block th:each="song : ${songsNotInPlaylist}">
+			<input type="hidden" name="idPlaylist" th:value="${currentPlaylist.id}" >
+     	 	<input type="checkbox" id="selectedSong" name="selectedSong" th:value="${song.id}">
+     	 	<label for="selectedSong" th:text="|${song.title} from ${song.album.title}(${song.album.artist})|"></label> 
+     	 	<br>
+   	    </th:block>
+   	    <button type="submit">Add Song</button>
+	</form>
 	-->
+	</th:block>
+	
 
 </body>
 </html>

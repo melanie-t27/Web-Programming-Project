@@ -69,10 +69,11 @@ public class Login extends HttpServlet{
 			response.sendRedirect(path);
 		}
 		else {
-			String path = "/Login.html";
+			String path = "/loginPage.html";
 			ServletContext servletContext = getServletContext();
 			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-			ctx.setVariable("errorLogin", error);
+			error = "Access denied, please try again!";
+			ctx.setVariable("error", error);
 			templateEngine.process(path, ctx, response.getWriter());
 			response.sendError(505, "Invalid user");
 		}

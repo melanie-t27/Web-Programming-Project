@@ -14,7 +14,7 @@
 	
 	<ul th:each="playlist : ${playlists}">
   		<li>
-  			<a th:href="@{/goToPlaylistPage(idPlaylist=${playlist.id})}">
+  			<a th:href="@{/goToPlaylistPage(idPlaylist=${playlist.id},group=1)}">
   				<span th:text="${playlist.name}">Playlist</span>
   			</a>
   			<small th:text="|Created ${playlist.date}|">Creation Date</small>
@@ -26,6 +26,7 @@
 	</th:block> -->
 	
 	<h2>Create a new playlist:</h2>
+	<p th:text="${errorPlaylist}"></p>
 	<form action="#" th:action="@{/createPlaylist}" method="POST">
 		<input type="text" name="titlePlaylist" placeholder="Name of the playlist" required/><br>
 		<p th:if="${songs.size() == 0 || songs == null}">There aren't any songs available, please add a song before creating a playlist.</p>
@@ -40,7 +41,8 @@
 	</form>
 	
 	
-	<h2>Add a new song:</h2>
+	<h2>Create a new song:</h2>
+	<p th:text="${resultSong}"></p>
 	<form action="#" th:action="@{/createSong}" method="POST" enctype='multipart/form-data'>
 	    <input type="text" name="title" placeholder="Title" required/><br>
 	    <select name="genre" required>

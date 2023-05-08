@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.*;
 
 import it.polimi.tiw.music.beans.*;
@@ -20,18 +19,17 @@ public class SongDAO {
 	public boolean createSongAlbum(String user, String titleSong, String genre, InputStream file, String titleAlbum, String artist, int year, InputStream cover) throws SQLException {
 		int idAlbum = -1;
 		try {
+			connection.setAutoCommit(false);
 			idAlbum = findIdAlbum(user, titleAlbum, artist);
 			if(idAlbum ==-1) {
 				createAlbum(user, titleAlbum, artist, year, cover);
 				idAlbum = findIdAlbum(user, titleAlbum, artist);
 			}
 			createSong(user, titleSong, genre, file, idAlbum);
-			System.out.println("added new song");
 			connection.commit();
 			
 		} catch (SQLException e){
 			connection.rollback();
-			System.out.println("SQL Exception in createSong");
 			throw new SQLException(e);
 		} finally {
 			connection.setAutoCommit(true);
@@ -51,7 +49,7 @@ public class SongDAO {
 			pstatement.setString(5, genre);
 			pstatement.executeUpdate();
 		} catch(SQLException e) {
-			
+			throw new SQLException(e);
 		} finally {
 			try {
 				pstatement.close();
@@ -76,7 +74,9 @@ public class SongDAO {
 				System.out.println("Album already existed");
 				idAlbum = result.getInt(idAlbum);	
 			}
-		} catch(SQLException e) {}
+		} catch(SQLException e) {
+			throw new SQLException(e);
+		}
 		finally {
 			try {
 				result.close();
@@ -106,7 +106,7 @@ public class SongDAO {
 			pstatement.setString(5, user);
 			pstatement.executeUpdate();
 		} catch(SQLException e) {
-			
+			throw new SQLException(e);
 		} finally {
 			try {
 				pstatement.close();
@@ -145,14 +145,13 @@ public class SongDAO {
 				sg.setUser(username);
 				byte[] audio = result.getBytes("file");
 				String encodedAudio=Base64.getEncoder().encodeToString(audio);
-				al.setCover(encodedAudio);
+				sg.setFile(encodedAudio);
 				
 				songs.add(sg);
 			}
 			
 		} catch (SQLException e) {
 			throw new SQLException(e);
-
 		} finally {
 			try {
 				result.close();
@@ -184,38 +183,41 @@ public class SongDAO {
 				Song sg = new Song();
 				Album al = new Album();
 				
-				al.setId(result.getInt("idAlbum"));
+				//al.setId(result.getInt("idAlbum"));
 				al.setTitle(result.getString("titleAlbum"));
 				al.setArtist(result.getString("artist"));
-				al.setYear(result.getInt("year"));
+				//al.setYear(result.getInt("year"));
 				byte[] imgData = result.getBytes("cover");
 				String encodedImg=Base64.getEncoder().encodeToString(imgData);
 				al.setCover(encodedImg);
 				
 				sg.setId(result.getInt("idSong"));
 				sg.setTitle(result.getString("title"));
-				sg.setGenre(result.getString("genre"));
+				//sg.setGenre(result.getString("genre"));
 				sg.setAlbum(al);
-				sg.setUser(username);
-				byte[] audio = result.getBytes("file");
-				String encodedAudio=Base64.getEncoder().encodeToString(audio);
-				sg.setFile(encodedAudio);
+				//sg.setUser(username);
+				//byte[] audio = result.getBytes("file");
+				//String encodedAudio=Base64.getEncoder().encodeToString(audio);
+				//sg.setFile(encodedAudio);
 				
 				songs.add(sg);
 			}
 			
 		} catch (SQLException e) {
+			e.printStackTrace();
 			throw new SQLException(e);
 
 		} finally {
 			try {
 				result.close();
 			} catch(Exception e1) {
+				e1.printStackTrace();
 				throw new SQLException(e1);
 			}
 			try {
 				pstatement.close();
 			} catch (Exception e2) {
+				e2.printStackTrace();
 				throw new SQLException(e2);
 			}
 		}
@@ -225,14 +227,8 @@ public class SongDAO {
 	
 	
 	public List<Song> findSongsNotInPlaylist(String username, int idPlaylist) throws SQLException {
-		List<Song> songs = findAllSongsByUsername(username);
-		songs.removeAll(findAllSongsInPlaylist(username, idPlaylist));
-		return songs;
-	}
-	
-	public List<Song> findTitleSongNotInPlaylist(String username, int idPlaylist) throws SQLException {
 		List<Song> songs = new ArrayList<>();
-		String query = "SELECT * FROM Song WHERE user = ? and idSong NOT IN (" +
+		String query = "SELECT * FROM Song Join Album on Song.user = Album.userId and Album.idAlbum = Song.album WHERE Song.user = ? and Song.idSong NOT IN (" +
 				"SELECT song FROM InPlaylist WHERE playlist = ?)";
 		ResultSet result = null;
 		PreparedStatement pstatement = null;
@@ -243,24 +239,31 @@ public class SongDAO {
 			pstatement.setInt(2, idPlaylist);
 			result = pstatement.executeQuery();
 			while (result.next()) {
+				Album al = new Album();
 				Song sg = new Song();
 				sg.setId(result.getInt("idSong"));
 				sg.setTitle(result.getString("title"));
+				al.setTitle(result.getString("titleAlbum"));
+				al.setArtist(result.getString("artist"));
+				sg.setAlbum(al);
 				songs.add(sg);
 			}
 			
 		} catch (SQLException e) {
+			e.printStackTrace();
 			throw new SQLException(e);
 
 		} finally {
 			try {
 				result.close();
 			} catch (Exception e1) {
+				e1.printStackTrace();
 				throw new SQLException(e1);
 			}
 			try {
 				pstatement.close();
 			} catch (Exception e2) {
+				e2.printStackTrace();
 				throw new SQLException(e2);
 			}
 		}
@@ -276,6 +279,7 @@ public class SongDAO {
 		try {
 			pstatement = connection.prepareStatement(query);
 			pstatement.setString(1, username);
+			pstatement.setInt(2, idSong);
 			result = pstatement.executeQuery();
 			while (result.next()) {
 				Album al = new Album();
@@ -294,21 +298,24 @@ public class SongDAO {
 				sg.setUser(username);
 				byte[] audio = result.getBytes("file");
 				String encodedAudio=Base64.getEncoder().encodeToString(audio);
-				al.setCover(encodedAudio);
+				sg.setFile(encodedAudio);
 			}
 			
 		} catch (SQLException e) {
+			e.printStackTrace();
 			throw new SQLException(e);
 
 		} finally {
 			try {
 				result.close();
 			} catch (Exception e1) {
+				e1.printStackTrace();
 				throw new SQLException(e1);
 			}
 			try {
 				pstatement.close();
 			} catch (Exception e2) {
+				e2.printStackTrace();
 				throw new SQLException(e2);
 			}
 		}

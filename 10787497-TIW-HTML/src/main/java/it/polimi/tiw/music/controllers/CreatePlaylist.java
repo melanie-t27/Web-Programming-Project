@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
@@ -51,6 +52,7 @@ public class CreatePlaylist extends HttpServlet{
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		HttpSession session = request.getSession(false);
+		String result = null;
 		if (session == null || session.getAttribute("currentUser") == null) {
 			String path = getServletContext().getContextPath();
 			response.sendRedirect(path);
@@ -62,18 +64,25 @@ public class CreatePlaylist extends HttpServlet{
 			
 			System.out.println("Titolo:"+titlePlaylist);
 			System.out.println("id Songs: " + Arrays.toString(songs));
-			if(titlePlaylist == null || idSongs == null /*|| idSongs.length == 0*/) {
+			if(titlePlaylist == null || idSongs == null || idSongs.length == 0) {
 				//response.sendError(505, "Parameters incomplete");
 				//return;
+				result = "Parameters incomplete";
 			}
 			
 			PlaylistDAO playlistDAO = new PlaylistDAO(connection);
 			try {
-				playlistDAO.createPlaylist(username, titlePlaylist, null, songs);
+				playlistDAO.createPlaylistWithSongs(username, titlePlaylist, songs);
 			} catch(Exception e) {
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error in creating playlist in the database");
 				return;
 			}
+			
+			
+			ServletContext servletContext = getServletContext();
+			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+			ctx.setVariable("resultPlaylist", result);
+			
 			String path = getServletContext().getContextPath() + "/goToHomePage";
 			response.sendRedirect(path);
 		}

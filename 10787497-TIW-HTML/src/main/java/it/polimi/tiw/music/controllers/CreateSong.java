@@ -1,6 +1,5 @@
 package it.polimi.tiw.music.controllers;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -11,7 +10,6 @@ import java.util.Calendar;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.UnavailableException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -70,7 +68,12 @@ public class CreateSong extends HttpServlet{
 			String artist = (String) request.getParameter("artist");
 			String yearString = (String) request.getParameter("year");
 			int year = -1;
-			String error = "None";
+			//boolean errorNotNew = false; 
+			//boolean errorAudio = false;
+			//boolean errorCover = false;
+			//boolean errorYear = false;
+			
+			String error = "";
 			boolean success = false;
 			
 			try {
@@ -80,13 +83,15 @@ public class CreateSong extends HttpServlet{
 				
 				//Check if the publicationYear is not bigger than the current year
 				if(year > currentYear) {
-					response.sendError(505, "Year of pubblication error");
-					return;
+					//errorYear = true;
+					//response.sendError(505, "Year of pubblication error");
+					//return;
 				}
 			} catch (NumberFormatException e) {
+				//errorYear = true;
 				error="The year of pubblication you have committed is not right, please try again!";
-				String path = getServletContext().getContextPath() + "/goToHomePage";
-				response.sendRedirect(path);
+				//String path = getServletContext().getContextPath() + "/goToHomePage";
+				//response.sendRedirect(path);
 			}
 			
 			Part coverPart = request.getPart("cover");
@@ -117,9 +122,14 @@ public class CreateSong extends HttpServlet{
 				contentTypeAudio = getServletContext().getMimeType(filename);			
 			}
 
-			if (cover == null || cover.available()==0 || !contentTypeCover.startsWith("image/") || audio == null || audio.available()==0 || !contentTypeAudio.startsWith("audio/")) { //Control of input
-				response.sendError(505, "Parameters incomplete");
-				return;
+			if (cover == null || cover.available()==0 || !contentTypeCover.startsWith("image/") ) { //Control of input
+				//errorCover = true;
+				//response.sendError(505, "Parameters incomplete");
+				//return;
+			}
+			
+			if(audio == null || audio.available()==0 || !contentTypeAudio.startsWith("audio/")) {
+				//errorAudio = true;
 			}
 			
 			SongDAO songDAO = new SongDAO(connection);
@@ -134,6 +144,12 @@ public class CreateSong extends HttpServlet{
 				} else {
 					error = "Something went wrong, please try later!";
 				}
+				
+				ServletContext servletContext = getServletContext();
+				final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+				
+				ctx.setVariable("resultSong", error);
+				
 				
 				String path = getServletContext().getContextPath() + "/goToHomePage";
 				response.sendRedirect(path);
