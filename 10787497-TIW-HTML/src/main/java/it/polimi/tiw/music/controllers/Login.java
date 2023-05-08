@@ -6,6 +6,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
@@ -45,6 +46,9 @@ public class Login extends HttpServlet{
 		String username = request.getParameter("username");
 	    String password = request.getParameter("password");
 	    User user = null;
+	    String error = null;
+	    
+	    //debugging
 	    System.out.println("username: "+username);
 	    System.out.println("password: "+password);
 	    
@@ -65,6 +69,11 @@ public class Login extends HttpServlet{
 			response.sendRedirect(path);
 		}
 		else {
+			String path = "/Login.html";
+			ServletContext servletContext = getServletContext();
+			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+			ctx.setVariable("errorLogin", error);
+			templateEngine.process(path, ctx, response.getWriter());
 			response.sendError(505, "Invalid user");
 		}
 	    

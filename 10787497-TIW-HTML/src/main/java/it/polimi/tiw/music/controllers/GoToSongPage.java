@@ -4,25 +4,31 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.UnavailableException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
+import it.polimi.tiw.music.beans.Playlist;
+import it.polimi.tiw.music.beans.Song;
 import it.polimi.tiw.music.beans.User;
 import it.polimi.tiw.music.dao.PlaylistDAO;
+import it.polimi.tiw.music.dao.SongDAO;
 
-public class CreatePlaylist extends HttpServlet{
-	private static final long serialVersionUID = 4L;
+public class GoToSongPage extends HttpServlet{
+	private static final long serialVersionUID = 6L;
 	private Connection connection = null;
 	private TemplateEngine templateEngine;
 	
@@ -49,33 +55,46 @@ public class CreatePlaylist extends HttpServlet{
 		}
 	}
 	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
 		if (session == null || session.getAttribute("currentUser") == null) {
 			String path = getServletContext().getContextPath();
 			response.sendRedirect(path);
-		} else {
+		}
+		else { 
+			Song song = new Song();
+			SongDAO songDAO = new SongDAO(connection);
 			String username = ((User) session.getAttribute("currentUser")).getUsername();
-			String titlePlaylist = (String) request.getParameter("titlePlaylist");
-			String[] idSongs = (String[]) request.getParameterValues("selectedSong");
-			int[] songs = Arrays.stream(idSongs).mapToInt(song -> Integer.parseInt(song)).toArray();
+			String chosenSong = request.getParameter("idSong");
+			String currentPlaylist = request.getParameter("currentPlaylist");
+			int idSong = -1;
+			int idPlaylist = -1;
 			
-			System.out.println("Titolo:"+titlePlaylist);
-			System.out.println("id Songs: " + Arrays.toString(songs));
-			if(titlePlaylist == null || idSongs == null /*|| idSongs.length == 0*/) {
-				//response.sendError(505, "Parameters incomplete");
-				//return;
-			}
+			try { 
+				idSong = Integer.parseInt(chosenSong);
+				idPlaylist = Integer.parseInt(currentPlaylist);
+			} catch(NumberFormatException e) {
+				//error
+			} 
 			
-			PlaylistDAO playlistDAO = new PlaylistDAO(connection);
 			try {
-				playlistDAO.createPlaylist(username, titlePlaylist, null, songs);
-			} catch(Exception e) {
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error in creating playlist in the database");
+				song = songDAO.findAllSongInfoById(username, idSong);
+				
+				
+			} catch(SQLException e) {
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error in retrieving songs in database from the database");
 				return;
 			}
-			String path = getServletContext().getContextPath() + "/goToHomePage";
-			response.sendRedirect(path);
+			
+			String path = "/WEB-INF/SongPage.html";
+			ServletContext servletContext = getServletContext();
+			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+			
+			ctx.setVariable("currentPlaylistID", idPlaylist);
+			ctx.setVariable("currentSong", song);
+			 
+			templateEngine.process(path, ctx, response.getWriter());
+			
 		}
 	}
 	
@@ -86,5 +105,6 @@ public class CreatePlaylist extends HttpServlet{
 			}
 		} catch (SQLException sqle) {}
 	}
+
 
 }

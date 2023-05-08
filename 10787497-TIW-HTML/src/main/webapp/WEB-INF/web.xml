@@ -2,6 +2,7 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" version="4.0">
   <display-name>10787497-TIW-HTML</display-name>
   
+  
   <context-param>
     <param-name>dbUrl</param-name>
     <param-value>jdbc:mysql://localhost:3306/PlayListMusicale?serverTimezone=UTC</param-value>
@@ -35,6 +36,15 @@
      </servlet-mapping>
      
      <servlet>
+		<servlet-name> Logout </servlet-name> 
+		<servlet-class> it.polimi.tiw.music.controllers.Logout </servlet-class>
+     </servlet>
+     <servlet-mapping>
+           <servlet-name> Logout </servlet-name>
+           <url-pattern> /logout </url-pattern>
+     </servlet-mapping>
+     
+     <servlet>
 		<servlet-name> GoToHomePage </servlet-name> 
 		<servlet-class> it.polimi.tiw.music.controllers.GoToHomePage </servlet-class>
      </servlet>
@@ -53,8 +63,22 @@
      </servlet-mapping>
      
      <servlet>
+		<servlet-name> GoToSongPage </servlet-name> 
+		<servlet-class> it.polimi.tiw.music.controllers.GoToSongPage </servlet-class>
+     </servlet>
+     <servlet-mapping>
+           <servlet-name> GoToSongPage </servlet-name>
+           <url-pattern> /goToSongPage </url-pattern>
+     </servlet-mapping>
+     
+     <servlet>
 		<servlet-name> CreateSong </servlet-name> 
 		<servlet-class> it.polimi.tiw.music.controllers.CreateSong </servlet-class>
+		<multipart-config>
+        	<max-file-size>16177215</max-file-size>
+        	<max-request-size>20971520</max-request-size>
+        	<file-size-threshold>5242880</file-size-threshold>
+    	</multipart-config>
      </servlet>
      <servlet-mapping>
            <servlet-name> CreateSong </servlet-name>
@@ -69,7 +93,5 @@
            <servlet-name> CreatePlaylist </servlet-name>
            <url-pattern> /createPlaylist </url-pattern>
      </servlet-mapping>
-     
-     
 	
 </web-app>

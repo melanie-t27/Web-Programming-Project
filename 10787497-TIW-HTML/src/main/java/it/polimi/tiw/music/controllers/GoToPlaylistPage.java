@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -84,9 +85,16 @@ public class GoToPlaylistPage extends HttpServlet{
 			try {
 				songsInPlaylist = songDAO.findAllSongsInPlaylist(username, playlist.getId());
 				System.out.println("Songs in playlist found");
-				songsNotInPlaylist = songDAO.findSongsNotInPlaylist(username, playlist.getId());
+				for(Song song:songsInPlaylist) {
+					System.out.print(song.getTitle()+", ");
+				}
+				System.out.println();
+				songsNotInPlaylist = songDAO.findTitleSongNotInPlaylist(username, playlist.getId());
 				System.out.println("Songs not in playlist found");
-				
+				for(Song song:songsNotInPlaylist) {
+					System.out.print(song.getTitle()+", ");
+				}
+				System.out.println();
 				
 			} catch(SQLException e) {
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error in retrieving songs in database from the database");
@@ -96,10 +104,11 @@ public class GoToPlaylistPage extends HttpServlet{
 			String path = "/WEB-INF/PlaylistPage.html";
 			ServletContext servletContext = getServletContext();
 			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-			
+			System.out.println("Processing and setting the variable for process...");
 			ctx.setVariable("currentPlaylist", playlist);
 			ctx.setVariable("songsInPlaylist", songsInPlaylist); 
 			ctx.setVariable("songsNotInPlaylist", songsNotInPlaylist); 
+			
 			templateEngine.process(path, ctx, response.getWriter());
 			
 		}

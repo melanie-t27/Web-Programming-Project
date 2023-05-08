@@ -26,7 +26,6 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 import it.polimi.tiw.music.beans.User;
 import it.polimi.tiw.music.dao.SongDAO;
 
-@MultipartConfig
 public class CreateSong extends HttpServlet{
 	private static final long serialVersionUID = 3L;
 	private Connection connection = null;
@@ -94,6 +93,11 @@ public class CreateSong extends HttpServlet{
 			InputStream cover = null;
 			String contentTypeCover = null;
 			if (coverPart != null) {
+				//for debugging
+				System.out.println(coverPart.getName());
+	            System.out.println(coverPart.getSize());
+	            System.out.println(coverPart.getContentType());
+	            //obtains input stream of the upload file
 				cover = coverPart.getInputStream();
 				String filename = coverPart.getSubmittedFileName();
 				contentTypeCover = getServletContext().getMimeType(filename);			
@@ -103,6 +107,11 @@ public class CreateSong extends HttpServlet{
 			InputStream audio = null;
 			String contentTypeAudio = null;
 			if (coverPart != null) {
+				//for debugging
+				System.out.println(audioPart.getName());
+	            System.out.println(audioPart.getSize());
+	            System.out.println(audioPart.getContentType());
+	          //obtains input stream of the upload file
 				audio = audioPart.getInputStream();
 				String filename = audioPart.getSubmittedFileName();
 				contentTypeAudio = getServletContext().getMimeType(filename);			
@@ -118,8 +127,8 @@ public class CreateSong extends HttpServlet{
 				success = songDAO.createSongAlbum(username, titleSong, genre, audio, titleAlbum, artist, year, cover);
 			} catch(SQLException e) {}
 			finally {
-				ServletContext servletContext = getServletContext();
-				final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+				//ServletContext servletContext = getServletContext();
+				//final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 				if(success) {
 					error = "A new song has been successfully submitted!";
 				} else {
