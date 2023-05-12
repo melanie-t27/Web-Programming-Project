@@ -48,36 +48,37 @@ public class Login extends HttpServlet{
 	    User user = null;
 	    String error = null;
 	    
-	    //debugging
-	    System.out.println("username: "+username);
-	    System.out.println("password: "+password);
-	    
-	    if (username == null || password == null) {
-			response.sendError(505, "Parameters incomplete");
-			return;
+	    if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
+			error = "Parameters incomplete";
+			String path = "/loginPage.html";
+			ServletContext servletContext = getServletContext();
+			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+			ctx.setVariable("error", error);
+			templateEngine.process(path, ctx, response.getWriter());
 		}
+	    
 	    try {
 			user = userDao.checkUser(username, password);
-		
 		} catch (SQLException e) {
-			response.sendError(500, "Database access failed");
+			error = "Database access failed";
 		}
-	    if (user != null) {
+	    if (user != null && error == null) {
 			HttpSession session = request.getSession();
 			session.setAttribute("currentUser", user);
 			String path = getServletContext().getContextPath() + "/goToHomePage";
 			response.sendRedirect(path);
-		}
-		else {
+		} else {
 			String path = "/loginPage.html";
 			ServletContext servletContext = getServletContext();
 			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 			error = "Access denied, please try again!";
 			ctx.setVariable("error", error);
 			templateEngine.process(path, ctx, response.getWriter());
-			response.sendError(505, "Invalid user");
 		}
-	    
+	}
+	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doPost(request , response);
 	}
 	
 	public void destroy() {

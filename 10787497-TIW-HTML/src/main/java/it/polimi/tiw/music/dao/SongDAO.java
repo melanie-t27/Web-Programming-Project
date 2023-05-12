@@ -16,7 +16,7 @@ public class SongDAO {
 		this.connection = connection;
 	}
 	
-	public boolean createSongAlbum(String user, String titleSong, String genre, InputStream file, String titleAlbum, String artist, int year, InputStream cover) throws SQLException {
+	public void createSongAlbum(String user, String titleSong, String genre, InputStream file, String titleAlbum, String artist, int year, InputStream cover) throws SQLException {
 		int idAlbum = -1;
 		try {
 			connection.setAutoCommit(false);
@@ -34,7 +34,6 @@ public class SongDAO {
 		} finally {
 			connection.setAutoCommit(true);
 		}
-		return true;
 	}
 	
 	private void createSong(String user, String title, String genre, InputStream file, int idAlbum) throws SQLException {
@@ -167,7 +166,6 @@ public class SongDAO {
 		return songs;
 	}
 	
-	
 	public List<Song> findAllSongsInPlaylist(String username, int idPlaylist) throws SQLException {
 		List<Song> songs = new ArrayList<>();
 		String query = "SELECT * FROM (Song JOIN InPlaylist ON Song.idSong = InPlaylist.song) JOIN Album ON Song.user = Album.userId and Album.idAlbum = Song.album WHERE Song.user = ? and InPlaylist.playlist = ? ORDER BY Album.year desc";
@@ -224,7 +222,6 @@ public class SongDAO {
 
 		return songs;
 	}
-	
 	
 	public List<Song> findSongsNotInPlaylist(String username, int idPlaylist) throws SQLException {
 		List<Song> songs = new ArrayList<>();
@@ -323,4 +320,77 @@ public class SongDAO {
 		return sg;
 	}
 	
+	public boolean isSongPresent(String username, int idSong) throws SQLException {
+		boolean r = false;
+		String query = "SELECT * FROM Song WHERE user = ? and idSong = ?";
+		ResultSet result = null;
+		PreparedStatement pstatement = null;
+		try {
+			pstatement = connection.prepareStatement(query);
+			pstatement.setString(1, username);
+			pstatement.setInt(2, idSong);
+			result = pstatement.executeQuery();
+			if (result.next()) {
+				r = true;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new SQLException(e);
+
+		} finally {
+			try {
+				result.close();
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				throw new SQLException(e1);
+			}
+			try {
+				pstatement.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				throw new SQLException(e2);
+			}
+		}
+		return r;
+	}
+
+	public boolean songAlreadyExists(String username, String titleSong, String titleAlbum, String artist) throws SQLException {
+		boolean r = false;
+		int idAlbum = findIdAlbum(username, titleAlbum, artist);
+		if(idAlbum == -1) {
+			r = false;
+		} else {
+			String query = "SELECT * FORM Song WHERE user = ? and album = ? and title = ?";
+			PreparedStatement pstatement = null;
+			ResultSet result = null;
+			try {
+				pstatement = connection.prepareStatement(query);
+				pstatement.setString(1, username);
+				pstatement.setInt(2, idAlbum);
+				pstatement.setString(3, titleSong);
+				result = pstatement.executeQuery();
+				if (result.next()) {
+					r = true;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new SQLException(e);
+			} finally {
+				try {
+					result.close();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+					throw new SQLException(e1);
+				}
+				try {
+					pstatement.close();
+				} catch (Exception e2) {
+					e2.printStackTrace();
+					throw new SQLException(e2);
+				}
+			}
+		}
+		return r;
+	}
 }

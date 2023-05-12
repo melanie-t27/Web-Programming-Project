@@ -3,23 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <title>Music</title>
+<link rel="stylesheet" type="text/css" media="all" href="/10787497-TIW-HTML/CSS/mystyle.css" th:href="@{/CSS/mystyle.css}" />
 </head>
 <body>
-
-	<div th:replace="/WEB-INF/header :: header"></div>	
-
-	<img width="100" th:src="${'data:image/jpeg;base64,'+ song.album.cover}"/><br> 
 	
-	<p th:text="|Title: ${song.title}|">Title</p><br>
-	<p th:text="|Genre: ${song.genre}|">Title</p><br>
-	<p th:text="|Artist: ${song.album.artist}|">Title</p><br>
-	<p th:text="|Album: ${song.album.title}|">Title</p><br>
-	<p th:text="|Year: ${song.album.year}|">Title</p><br>
+	<div class="container">
+		<div th:replace="/WEB-INF/header :: header"></div>	
 	
-	<audio controls>
- 	 	<source th:src="${'data:audio/mpeg;base64,' + song.file }" type="audio/mpeg">
-	</audio>
-	
+		<div class="content">
+			<div class="half">
+				<div class="player">
+					<img th:src="${'data:image/jpeg;base64,'+ song.album.cover}"/><br> 
+					<audio controls>
+ 	 					<source th:src="${'data:audio/mpeg;base64,' + song.file }" type="audio/mpeg">
+					</audio>
+				</div>
+			</div>
+			<div class="half">
+				<p th:text="|Title: ${song.title}|">Title</p><br>
+				<p th:text="|Genre: ${song.genre}|">Title</p><br>
+				<p th:text="|Artist: ${song.album.artist}|">Title</p><br>
+				<p th:text="|Album: ${song.album.title}|">Title</p><br>
+				<p th:text="|Year: ${song.album.year}|">Title</p><br>
+				<p> <a th:href="@{/goToPlaylistPage(idPlaylist=${currentPlaylist},group=1)}">
+					<i class="arrow left"></i>
+					<b>Go Back to Playlist</b>
+					</a> 
+				</p>
+			</div>
+		</div>
+	</div>
 	
 </body>
 </html>

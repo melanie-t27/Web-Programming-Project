@@ -4,43 +4,55 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Music</title>
+	<link rel="stylesheet" type="text/css" media="all" href="/10787497-TIW-HTML/CSS/mystyle.css" th:href="@{/CSS/mystyle.css}" />
 </head>
 
 <body>
+	<div class="container">
 	<div th:replace="/WEB-INF/header :: header"></div>	
-
-	<h3 th:text="${currentPlaylist.name}">Playlist</h3>
+	
+	<div class="content">
+	<h2 th:text="${currentPlaylist.name}">Playlist</h2>
 	<p th:text="|Created ${currentPlaylist.date}|">Created...</p>
 	
 	<p th:if="${songsInPlaylist == null || songsInPlaylist.size() == 0}"> This playlist doesn't have any songs yet.</p>
-	
-	<th:block th:if="${group > 1}">
-		<a th:href="@{/goToPlaylistPage(idPlaylist=${currentPlaylist.id},group=${group-1})}">Previous</a> 
-	</th:block>
+	<p th:if="${errorToPlayer != null}" class="error" th:text="${errorToPlayer}"></p>
+	</div>
 	
 	<table th:if="${songsInPlaylist.size() > 0}">
 		<tbody>
 			<tr>
-				<th:block th:each="song : ${songsInPlaylist}">
-					<td>
-						<div>
-							<img width="100" th:src="${'data:image/jpeg;base64,'+ song.album.cover}"/><br> 
-							<a th:href="@{/goToPlayer(idSong=${song.id}, currentPlaylist=${currentPlaylist.id})}"><span th:text="${song.title}">Song</span></a>
-							<br>
-							<!-- <p th:text="|${song.album.artist}(${song.album.title}|">Artist (Album)</p> -->
-						</div>
-					</td>
-					<td> </td>
-				</th:block>
+				<td th:if="${group > 1}">
+					<a th:href="@{/goToPlaylistPage(idPlaylist=${currentPlaylist.id},group=${group-1})}">
+						<i class="arrow left"></i>
+						<b>Back</b>
+					</a> 
+				</td>
+				
+				<td th:each="song : ${songsInPlaylist}">
+					<img width="100" th:src="${'data:image/jpeg;base64,'+ song.album.cover}"/><br> 
+					<a th:href="@{/goToPlayer(idSong=${song.id}, currentPlaylist=${currentPlaylist.id})}"> 
+						<span th:text="${song.title}">Song</span>
+					</a>
+				</td>
+		
+				<td th:if="${next == true}">
+					<a th:href="@{/goToPlaylistPage(idPlaylist=${currentPlaylist.id},group=${group+1})}">
+						<b>More</b>
+						<i class="arrow right"></i>
+					</a> 
+				</td>
+				
 			</tr>
 		</tbody>
 	</table>
-	<th:block th:if="${next == true}">
-		<a th:href="@{/goToPlaylistPage(idPlaylist=${currentPlaylist.id},group=${group+1})}">Following</a> 
-	</th:block>
 	
-	<th:block th:if="${songsNotInPlaylist.size() > 0}">
+	
+	<div class="content">
 	<h3>Add another song to your playlist:</h3>
+	<p th:if="${errorAddSong != null}" class="error" th:text="${errorAddSong}"></p>
+	<p th:if="${songsNotInPlaylist.size() == 0}">This playlist already contains all of yours song.</p>
+	<th:block th:if="${songsNotInPlaylist.size() > 0}">
 	<form action="#" th:action="@{/addSongToPlaylist}" method="POST">
 		<input type="hidden" name="idPlaylist" th:value="${currentPlaylist.id}">
 		<select name="selectedSong" required>
@@ -50,20 +62,10 @@
       	<br>
 		<button type="submit">Submit Song</button>
 	</form>
-	
-	<!--  
-	<form action="#" th:action="@{/addSongToPlaylist}" method="POST">
-		<th:block th:each="song : ${songsNotInPlaylist}">
-			<input type="hidden" name="idPlaylist" th:value="${currentPlaylist.id}" >
-     	 	<input type="checkbox" id="selectedSong" name="selectedSong" th:value="${song.id}">
-     	 	<label for="selectedSong" th:text="|${song.title} from ${song.album.title}(${song.album.artist})|"></label> 
-     	 	<br>
-   	    </th:block>
-   	    <button type="submit">Add Song</button>
-	</form>
-	-->
 	</th:block>
+	</div>
 	
+	</div>
 
 </body>
 </html>

@@ -31,7 +31,6 @@ public class UserDAO {
 		} catch (SQLException e) {
 		    e.printStackTrace();
 			throw new SQLException(e);
-
 		} finally {
 			try {
 				result.close();
@@ -57,11 +56,9 @@ public class UserDAO {
 			pstatement.setString(2, password);
 			pstatement.setString(3, name);
 			pstatement.executeUpdate();
-			
 		} catch (SQLException e) {
 		    e.printStackTrace();
 			throw new SQLException(e);
-
 		} finally {
 			try {
 				pstatement.close();

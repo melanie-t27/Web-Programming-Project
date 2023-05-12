@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -59,75 +60,94 @@ public class GoToPlaylistPage extends HttpServlet{
 			String path = getServletContext().getContextPath();
 			response.sendRedirect(path);
 		}
-		else { 
-			PlaylistDAO playlistDAO = new PlaylistDAO(connection);
-			SongDAO songDAO = new SongDAO(connection);
-			List<Song> songsInPlaylist = new ArrayList<>();
-			List<Song> songsNotInPlaylist = new ArrayList<>();
-			List<Song> groupSongs = new ArrayList<>();
-			Playlist playlist = new Playlist();
-			String username = ((User) session.getAttribute("currentUser")).getUsername();
-			String chosenPlaylist = request.getParameter("idPlaylist");
-			String groupChosen = request.getParameter("group");
-			int group = 0;
-			boolean next = false;
-			
-			try { 
-				int idPlaylist = Integer.parseInt(chosenPlaylist);
-				System.out.println("Accessing playlist with id="+ idPlaylist);
-				playlist = playlistDAO.getPlaylistById(username, idPlaylist);
-				System.out.println("Playlist found");
-				group = Integer.parseInt(groupChosen);
-				System.out.println("Playlist found");
-			} catch(SQLException e) {
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error in retrieving playlist from the database");
-				return;
-			} catch(NumberFormatException e) {
-				//error
-			}
-			
-			try {
-				songsInPlaylist = songDAO.findAllSongsInPlaylist(username, playlist.getId());
-				System.out.println("Songs in playlist found");
-				for(Song song:songsInPlaylist) {
-					System.out.print(song.getTitle()+", ");
-				}
-				System.out.println();
-				songsNotInPlaylist = songDAO.findSongsNotInPlaylist(username, playlist.getId());
-				System.out.println("Songs not in playlist found");
-				for(Song song:songsNotInPlaylist) {
-					System.out.print(song.getTitle()+", ");
-				}
-				System.out.println();
-				
-				if(songsInPlaylist.size() > group*5) {
-					next = true;
-				} else {
-					next = false;
-				}
-				
-				for(int i = group*5-5; i < group*5 && i < songsInPlaylist.size() ; i++) {
-					groupSongs.add(songsInPlaylist.get(i));
-				}
-				
-			} catch(SQLException e) {
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error in retrieving songs in database from the database");
-				return;
-			}
-			
-			String path = "/WEB-INF/PlaylistPage.html";
-			ServletContext servletContext = getServletContext();
-			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-			System.out.println("Processing and setting the variable for process...");
-			ctx.setVariable("currentPlaylist", playlist);
-			ctx.setVariable("songsInPlaylist", groupSongs); 
-			ctx.setVariable("songsNotInPlaylist", songsNotInPlaylist); 
-			ctx.setVariable("next", next);
-			ctx.setVariable("group", group);
-			
-			templateEngine.process(path, ctx, response.getWriter());
-			
+		
+		PlaylistDAO playlistDAO = new PlaylistDAO(connection);
+		SongDAO songDAO = new SongDAO(connection);
+		List<Song> songsInPlaylist = new ArrayList<>();			
+		List<Song> songsNotInPlaylist = new ArrayList<>();
+		List<Song> groupSongs = new ArrayList<>();
+		Playlist playlist = new Playlist();			
+		String username = ((User) session.getAttribute("currentUser")).getUsername();
+		String chosenPlaylist = request.getParameter("idPlaylist");
+		String groupChosen = request.getParameter("group");			
+		int group = 0;
+		boolean next = false;
+		String error = ""; 
+		
+		//handling forward from AddSongToPlaylist
+		String errorToPlayer = (String) request.getAttribute("errorToPlayer");
+		String errorAddSong = (String) request.getAttribute("errorAddSong");
+		
+		//checking inputs
+		try { 
+			int idPlaylist = Integer.parseInt(chosenPlaylist);
+			playlist = playlistDAO.getPlaylistById(username, idPlaylist);
+			group = Integer.parseInt(groupChosen);
+		} catch(SQLException e) {
+			error = "Something went wrong, please try again.";
+		} catch(NumberFormatException e) {
+			error ="Parameters invalid, please try again.";
 		}
+		
+		//checking if the idPlaylist submitted doesn't match any already existing play-list of the user
+		if(playlist == null) {
+			error = "Playlist doesn't exist";
+		}
+		
+		//if the inputs aren't valid, then forward to GoToHomePage
+		if(!error.equals("")) {
+			String path = "/goToHomePage";
+			request.setAttribute("errorToPlaylist", error);
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(path);
+			dispatcher.forward(request,response);
+			return;
+		}
+		
+		try {
+			songsInPlaylist = songDAO.findAllSongsInPlaylist(username, playlist.getId());
+			songsNotInPlaylist = songDAO.findSongsNotInPlaylist(username, playlist.getId());
+			
+			if(group <= 0) {
+				group = 1;
+			}
+			if(group > (int) songsInPlaylist.size() / 5 + 1) {
+				group = (int) songsInPlaylist.size() / 5 + 1;
+			}
+			
+			if(songsInPlaylist.size() > group * 5) {
+				next = true;
+			} else {
+				next = false;
+			}
+			
+			for(int i = group * 5 - 5; i < group * 5 && i < songsInPlaylist.size() ; i++) {
+				groupSongs.add(songsInPlaylist.get(i));
+			}	
+		} catch(SQLException e) {
+			//if the connection to database failed
+			String path = "/goToHomePage";
+			error = "Something went wrong while accessing the playlist, please try again.";
+			request.setAttribute("errorToPlaylist", error);
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(path);
+			dispatcher.forward(request,response);
+			return;
+		}
+
+		String path = "/WEB-INF/PlaylistPage.html";
+		ServletContext servletContext = getServletContext();
+		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+		ctx.setVariable("currentPlaylist", playlist);
+		ctx.setVariable("songsInPlaylist", groupSongs); 
+		ctx.setVariable("songsNotInPlaylist", songsNotInPlaylist); 
+		ctx.setVariable("next", next);
+		ctx.setVariable("group", group);
+		ctx.setVariable("errorAddSong", errorAddSong);
+		ctx.setVariable("errorToPlayer", errorToPlayer);
+		templateEngine.process(path, ctx, response.getWriter());
+	}
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request , response);
 	}
 	
 	

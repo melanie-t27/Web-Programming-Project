@@ -62,10 +62,8 @@ public class PlaylistDAO {
 					addSongInPlaylist(idPlaylist, song);
 				}
 			} 
-			
 			con.commit();
 		} catch (SQLException e) {
-			con.setAutoCommit(true);
 			e.printStackTrace();
 			con.rollback(); //riporta tutto allo stato precedente
 			throw new SQLException(e);
@@ -91,19 +89,21 @@ public class PlaylistDAO {
 			try {
 				pstatement.close();
 			} catch (Exception e2) { 
-				e2.printStackTrace();//errore che la playlist non è stata creata 
+				e2.printStackTrace();
+				throw new SQLException(e2);
 			}
 		}
 	}
 	
-	public void addSongInPlaylist(int idPlaylist, int idSong) throws SQLException {
+	public boolean addSongInPlaylist(int idPlaylist, int idSong) throws SQLException {
 		String query = "INSERT into InPlaylist (playlist, song) VALUES(?, ?)";
+		int result = 0;
 		PreparedStatement pstatement = null;	
 		try {
 			pstatement = con.prepareStatement(query);
 			pstatement.setInt(1, idPlaylist);
 			pstatement.setInt(2, idSong);
-			pstatement.executeUpdate();
+			result = pstatement.executeUpdate();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -117,8 +117,8 @@ public class PlaylistDAO {
 				throw new SQLException(e2);
 			}
 		}
+		return (result > 0);
 	}
-	
 	
 	public int findPlaylistId(String username, String namePlaylist) throws SQLException {
 		int playlist = -1;
@@ -151,18 +151,25 @@ public class PlaylistDAO {
 		return playlist;
 	}
 	
+	public boolean isPlaylistPresent(String username, int idPlaylist) throws SQLException {
+		Playlist p = getPlaylistById(username, idPlaylist);
+		if (p!=null) {
+			return true;
+		} else return false;
+	}
 	
 	public Playlist getPlaylistById(String username, int idPlaylist) throws SQLException {
 		String query = "SELECT * FROM Playlist WHERE idUser = ? and idPlaylist = ?";
 		ResultSet result = null;
 		PreparedStatement pstatement = null;
-		Playlist np = new Playlist();
+		Playlist np = null;
 		try {
 			pstatement = con.prepareStatement(query);
 			pstatement.setString(1, username);
 			pstatement.setInt(2, idPlaylist);
 			result = pstatement.executeQuery();
 			if (result.next()) {
+				np = new Playlist();
 				np.setId(result.getInt("idPlaylist"));
 				np.setName(result.getString("name"));
 				np.setDate(result.getDate("creationDate"));
@@ -185,5 +192,39 @@ public class PlaylistDAO {
 		}
 		return np;
 	}
-	
+
+	public boolean isSongPresentInPlaylist(int idSong, int idPlaylist) throws SQLException {
+		boolean r = false;
+		String query = "SELECT * FROM InPlaylist WHERE song = ? and playlist = ?";
+		ResultSet result = null;
+		PreparedStatement pstatement = null;
+		try {
+			pstatement = con.prepareStatement(query);
+			pstatement.setInt(1, idSong);
+			pstatement.setInt(2, idPlaylist);
+			result = pstatement.executeQuery();
+			if (result.next()) {
+				r = true;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new SQLException(e);
+
+		} finally {
+			try {
+				result.close();
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				throw new SQLException(e1);
+			}
+			try {
+				pstatement.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				throw new SQLException(e2);
+			}
+		}
+		return r;
+	}
 }

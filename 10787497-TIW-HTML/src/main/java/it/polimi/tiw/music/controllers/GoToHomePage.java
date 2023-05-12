@@ -53,32 +53,47 @@ public class GoToHomePage extends HttpServlet {
 			String path = getServletContext().getContextPath();
 			response.sendRedirect(path);
 		}
-		else {
-			List<String> genres = Arrays.asList("Pop", "Indie", "Rock", "Alternative", "R&B");
-			PlaylistDAO playlistDAO = new PlaylistDAO(connection);
-			SongDAO songDAO = new SongDAO(connection);
-			List<Playlist> playlist = new ArrayList<>();
-			List<Song> songs = new ArrayList<>();
-			String username = ((User) session.getAttribute("currentUser")).getUsername();
-			
-			try {
-				playlist = playlistDAO.findPlaylists(username);
-				songs = songDAO.findAllSongsByUsername(username);
-			} catch(Exception e) {
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error in retrieving datas from the database");
-				return;
-			}
-			
-			String path = "/WEB-INF/HomePage.html";
-			ServletContext servletContext = getServletContext();
-			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-			
-			ctx.setVariable("playlists", playlist);
-			ctx.setVariable("songs", songs);
-			ctx.setVariable("genres", genres);
-			templateEngine.process(path, ctx, response.getWriter());
-			
+	
+		List<String> genres = Arrays.asList("Pop", "Indie", "Rock", "Alternative", "R&B");
+		PlaylistDAO playlistDAO = new PlaylistDAO(connection);
+		SongDAO songDAO = new SongDAO(connection);
+		List<Playlist> playlist = new ArrayList<>();
+		List<Song> songs = new ArrayList<>();
+		String username = ((User) session.getAttribute("currentUser")).getUsername();
+		String error = "";
+		
+		//Handling forward 
+		String errorPlaylist = (String) request.getAttribute("errorToPlaylist");
+		String errorNewSong = (String) request.getAttribute("errorNewSong");
+		String errorNewPlaylist = (String) request.getAttribute("errorNewPlaylist");
+		String errorAddSong = (String) request.getAttribute("errorAddSong");
+		if(errorAddSong != null && !errorAddSong.equals("")) {
+			errorAddSong = "Something went wrong while adding a song to a playlist, please try again.";
 		}
+		
+		try {
+			playlist = playlistDAO.findPlaylists(username);
+			songs = songDAO.findAllSongsByUsername(username);
+		} catch(Exception e) {
+			error = "Something went wrong, please logout and try again!";
+		}
+		
+		String path = "/WEB-INF/HomePage.html";
+		ServletContext servletContext = getServletContext();
+		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+		ctx.setVariable("playlists", playlist);
+		ctx.setVariable("songs", songs);
+		ctx.setVariable("genres", genres);
+		ctx.setVariable("error", error);
+		ctx.setVariable("errorToPlaylist", errorPlaylist);
+		ctx.setVariable("errorNewSong", errorNewSong);
+		ctx.setVariable("errorNewPlaylist", errorNewPlaylist);
+		ctx.setVariable("errorAddSong", errorAddSong);
+		templateEngine.process(path, ctx, response.getWriter());
+	}
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request , response);
 	}
 	
 	

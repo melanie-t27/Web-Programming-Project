@@ -3,14 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <title>Music</title>
+<link rel="stylesheet" type="text/css" media="all" href="/10787497-TIW-HTML/CSS/mystyle.css" th:href="@{/CSS/mystyle.css}"/>
 </head>
-<body>
-	<h1>Welcome to the songs and playlists management application</h1>
+<body class="text-center">	
+	
+	
+	<h1>Welcome to music application!</h1>
 	<h2>Please, enter your credentials:</h2>
-	<p th:text="${error}"></p>
-	<form action="Login" method="POST">
-		<input type="text" name="username" placeholder="username"><br>
-		<input type="password" name="password" placeholder="password"><br> 
+	<p class="error" th:text="${error}"></p>
+	<form action="Login" method="POST" class="form-login">
+		<label for="username">Username</label>
+		<div class="input">
+			<input type="text" name="username">
+		</div>
+		<label for="password">Password</label>
+		<div class="input">
+			<input type="password" name="password">
+	    </div>
 		<input type="submit" value="login">
 	</form>
 	

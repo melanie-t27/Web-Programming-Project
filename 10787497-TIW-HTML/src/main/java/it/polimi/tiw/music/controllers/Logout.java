@@ -13,7 +13,6 @@ public class Logout extends HttpServlet{
 	
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		
 		//Take the session if it exists
 		HttpSession session = request.getSession(false);
 		
@@ -27,5 +26,7 @@ public class Logout extends HttpServlet{
 		response.sendRedirect(path);
 	}
 
-
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request , response);
+	}
 }
