@@ -31,7 +31,7 @@
 				
 				<td th:each="song : ${songsInPlaylist}">
 					<img width="100" th:src="${'data:image/jpeg;base64,'+ song.album.cover}"/><br> 
-					<a th:href="@{/goToPlayer(idSong=${song.id}, currentPlaylist=${currentPlaylist.id})}"> 
+					<a th:href="@{/goToPlayer(idSong=${song.id}, currentPlaylist=${currentPlaylist.id}, group=${group})}"> 
 						<span th:text="${song.title}">Song</span>
 					</a>
 				</td>
@@ -51,12 +51,12 @@
 	<div class="content">
 	<h3>Add another song to your playlist:</h3>
 	<p th:if="${errorAddSong != null}" class="error" th:text="${errorAddSong}"></p>
-	<p th:if="${songsNotInPlaylist.size() == 0}">This playlist already contains all of yours song.</p>
+	<p th:if="${songsNotInPlaylist.size() == 0}">This playlist already contains all of your song.</p>
 	<th:block th:if="${songsNotInPlaylist.size() > 0}">
 	<form action="#" th:action="@{/addSongToPlaylist}" method="POST">
 		<input type="hidden" name="idPlaylist" th:value="${currentPlaylist.id}">
 		<select name="selectedSong" required>
-	    	<option selected>Your Song</option>
+	    	<option selected>---</option>
         	<option th:each="song : ${songsNotInPlaylist}" th:value="${song.id}" th:text="|${song.title} from ${song.album.title}(${song.album.artist})|">Song</option>
       	</select>
       	<br>

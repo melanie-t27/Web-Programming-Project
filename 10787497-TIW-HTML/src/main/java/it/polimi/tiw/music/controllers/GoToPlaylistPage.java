@@ -59,6 +59,7 @@ public class GoToPlaylistPage extends HttpServlet{
 		if (session == null || session.getAttribute("currentUser") == null) {
 			String path = getServletContext().getContextPath();
 			response.sendRedirect(path);
+			return;
 		}
 		
 		PlaylistDAO playlistDAO = new PlaylistDAO(connection);

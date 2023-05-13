@@ -20,12 +20,18 @@ public class SongDAO {
 		int idAlbum = -1;
 		try {
 			connection.setAutoCommit(false);
+			System.out.println("CREATE SONG IN SONG DAO");
 			idAlbum = findIdAlbum(user, titleAlbum, artist);
-			if(idAlbum ==-1) {
+			if(idAlbum == -1) {
+				System.out.println("album not found, so creating it...");
 				createAlbum(user, titleAlbum, artist, year, cover);
+				System.out.println("album created");
 				idAlbum = findIdAlbum(user, titleAlbum, artist);
+				System.out.println("with id = "+idAlbum);
 			}
+			System.out.println("creating song with id album = "+ idAlbum);
 			createSong(user, titleSong, genre, file, idAlbum);
+			System.out.println("song created!");
 			connection.commit();
 			
 		} catch (SQLException e){
@@ -59,11 +65,12 @@ public class SongDAO {
 	}
 	
 	private int findIdAlbum(String user, String title, String artist) throws SQLException {
-		String query = "SELECT idAlbum FROM Album WHERE title = ? and artist = ? and userId = ? ";
+		String query = "SELECT idAlbum FROM Album WHERE titleAlbum = ? and artist = ? and userId = ? ";
 		ResultSet result = null;
 		PreparedStatement pstatement = null;
 		int idAlbum = -1;
 		try {
+			System.out.println("FINDING ALBUM ID....");
 			pstatement = connection.prepareStatement(query);
 			pstatement.setString(1, title);
 			pstatement.setString(2, artist);
@@ -71,7 +78,8 @@ public class SongDAO {
 			result = pstatement.executeQuery();
 			if(result.next()) {
 				System.out.println("Album already existed");
-				idAlbum = result.getInt(idAlbum);	
+				idAlbum = result.getInt("idAlbum");	
+				System.out.println("Album id = "+ idAlbum);
 			}
 		} catch(SQLException e) {
 			throw new SQLException(e);
@@ -93,10 +101,11 @@ public class SongDAO {
 	}
 	
 	private void createAlbum(String user, String title, String artist, int year, InputStream cover) throws SQLException {
-		String query = "INSERT into Album (title, artist, year, cover, userId) VALUES(?, ?, ?, ?, ?)";
+		String query = "INSERT into Album (titleAlbum, artist, year, cover, userId) VALUES(?, ?, ?, ?, ?)";
 		PreparedStatement pstatement = null;
 		
 		try {
+			System.out.println("CREATING ALBUM...");
 			pstatement = connection.prepareStatement(query);
 			pstatement.setString(1, title);
 			pstatement.setString(2, artist);
@@ -357,40 +366,88 @@ public class SongDAO {
 
 	public boolean songAlreadyExists(String username, String titleSong, String titleAlbum, String artist) throws SQLException {
 		boolean r = false;
+		System.out.println("FINDIG OUT IF THE SONG ALREADY EXISTS....");
+		
 		int idAlbum = findIdAlbum(username, titleAlbum, artist);
+		System.out.println("idAlbum="+idAlbum);
 		if(idAlbum == -1) {
-			r = false;
-		} else {
-			String query = "SELECT * FORM Song WHERE user = ? and album = ? and title = ?";
-			PreparedStatement pstatement = null;
-			ResultSet result = null;
-			try {
-				pstatement = connection.prepareStatement(query);
-				pstatement.setString(1, username);
-				pstatement.setInt(2, idAlbum);
-				pstatement.setString(3, titleSong);
-				result = pstatement.executeQuery();
-				if (result.next()) {
-					r = true;
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-				throw new SQLException(e);
-			} finally {
-				try {
-					result.close();
-				} catch (Exception e1) {
-					e1.printStackTrace();
-					throw new SQLException(e1);
-				}
-				try {
-					pstatement.close();
-				} catch (Exception e2) {
-					e2.printStackTrace();
-					throw new SQLException(e2);
-				}
+			System.out.println("Album didn't exist so neither the song, returning false..");
+			return false;
+		}
+		String query = "SELECT * FROM Song WHERE user = ? and album = ? and title = ?";
+		PreparedStatement pstatement = null;
+		ResultSet result = null;
+		try {
+			System.out.println("trying to execute query ");
+			pstatement = connection.prepareStatement(query);
+			pstatement.setString(1, username);
+			pstatement.setInt(2, idAlbum);
+			pstatement.setString(3, titleSong);
+			result = pstatement.executeQuery();
+			if (result.next()) {
+				System.out.println("La canzone esiste già");
+				r = true;
 			}
+			System.out.println("La canzone non esiste ancora");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new SQLException(e);
+		} finally {
+			try {
+				result.close();
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				throw new SQLException(e1);
+			}
+			try {
+				pstatement.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				throw new SQLException(e2);
+			}
+		}
+		
+		return r;
+	}
+
+	public boolean songAlreadyExists2(String username, String titleSong, String titleAlbum, String artist) throws SQLException {
+		boolean r = false;
+		System.out.println("FINDIG OUT IF THE SONG ALREADY EXISTS....");
+	
+		String query = "SELECT * FROM Song JOIN Album ON Song.album = Album.idAlbum and Song.user = Album.userId WHERE Song.user = ? and Album.titleAlbum = ? and Song.title = ? and Album.artist = ?";
+		PreparedStatement pstatement = null;
+		ResultSet result = null;
+		try {
+			System.out.println("trying to execute query ");
+			pstatement = connection.prepareStatement(query);
+			pstatement.setString(1, username);
+			pstatement.setString(2, titleAlbum);
+			pstatement.setString(3, titleSong);
+			pstatement.setString(4, artist);
+			result = pstatement.executeQuery();
+			if (result.next()) {
+				System.out.println("La canzone esiste già");
+				r = true;
+			} else System.out.println("La canzone non esiste ancora");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new SQLException(e);
+		} finally {
+			try {
+				result.close();
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				throw new SQLException(e1);
+			}
+			try {
+				pstatement.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				throw new SQLException(e2);
+			}
+			
 		}
 		return r;
 	}
+
 }

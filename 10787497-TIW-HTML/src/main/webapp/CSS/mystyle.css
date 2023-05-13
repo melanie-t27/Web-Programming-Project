@@ -147,7 +147,47 @@ header ul li a:hover {
 	margin-left: 5px;
 }
 
+.container .content form {
+	margin-left:20px;
+} 
+
+.container .content button {
+	border: none;
+	outline: none;
+	border-radius: 10px;
+	margin-top: 10px;
+	padding: 3px 20px;
+	font-size: 17px;
+  	background: grey;
+ 	color: #fff;
+  	border: #fff;
+}
+
+.container .content button:hover {
+	background: #93221f; 
+}
+
+.container .content select {
+	border-radius: 10px;
+	margin-top: 10px;
+	margin-left: 3px;
+	padding: 3px 20px;
+	font-size: 13px;
+}
+
+.container .content label{
+	font-style: italic;
+}
+
+
 .container .content .half {
+	float: left;
+	width: 50%; 
+	padding: 5%
+
+}
+
+.container .content .half1 {
 	float: left;
 	width: 45%; 
 	padding: 5%
@@ -158,19 +198,121 @@ header ul li a:hover {
 	margin-left:20px;
 } 
 
+.container .content .half1 form {
+	margin-left:20px;
+}
+
+.container .content .half label{
+	font-style: italic;
+}
+
+.container .content .half label span{
+	font-size: 10px;
+}
+
+.container .content .half .song{
+	font-style: normal;
+}
+
+.container .content .half1 label{
+	font-style: italic;
+}
+
+
+.container .content .half button {
+	border: none;
+	outline: none;
+	border-radius: 10px;
+	margin-top: 10px;
+	padding: 3px 20px;
+	font-size: 17px;
+  	background: grey;
+ 	color: #fff;
+  	border: #fff;
+}
+
+.container .content .half1 button {
+	border: none;
+	outline: none;
+	border-radius: 10px;
+	margin-top: 10px;
+	padding: 3px 20px;
+	font-size: 17px;
+  	background: grey;
+ 	color: #fff;
+  	border: #fff;
+}
+
+.container .content .half button:hover {
+	background: #93221f; 
+}
+
+.container .content .half1 button:hover {
+	background: #93221f; 
+}
+
+.container .content .half input[type="text"] {
+  	top: 0;
+  	left: 0;
+  	border: 1px solid grey;
+  	padding: 5px;
+  	margin: 5px;
+  	border-radius: 10px;
+  	font-size: 15px;
+}
+
+.container .content .half input[type="checkbox"] {
+  	top: 0;
+  	left: 0;
+  	border: 1px solid grey;
+  	margin: 7px;
+  	border-radius: 10px;
+}
+
+.container .content .half1 input[type="text"] {
+  	top: 0;
+  	left: 0;
+  	border: 1px solid grey;
+  	padding: 5px;
+  	margin: 5px;
+  	border-radius: 10px;
+  	font-size: 15px;
+}
+
+.container .content .half1 input[type="file"]{
+	border-radius: 10px;
+	margin-top: 10px;
+	padding: 3px 20px;
+	font-size: 13px;
+}
+
+.container .content .hal1 select {
+	border-radius: 10px;
+	margin-top: 10px;
+	padding: 3px 20px;
+	font-size: 13px;
+}
+
 .container .content .half .error {
+	color: red;
+}
+
+.container .content .half1 .error {
 	color: red;
 }
 
 .container .content .half .player {
 	float: right;
 	margin-right: 0px;
+	margin: auto;
+    text-align: center;
 }
 
 
 .container .content .half .player img {
 	width: 70%;
-	align-content: right;
+    height: auto;
+    object-fit: contain;
 }
 
 .container .content .half .player audio {
@@ -233,8 +375,11 @@ header ul li a:hover {
   	border: #fff;
 }
 
+.form-login input[type="submit"]:hover{
+	background: #93221f; 
+}
 
-/*Playlist Page */
+/*Play-list Page */
 
 table {
 	margin-left: auto;

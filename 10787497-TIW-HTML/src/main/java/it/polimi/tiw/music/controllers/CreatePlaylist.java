@@ -56,6 +56,7 @@ public class CreatePlaylist extends HttpServlet{
 		if (session == null || session.getAttribute("currentUser") == null) {
 			String path = getServletContext().getContextPath();
 			response.sendRedirect(path);
+			return;
 		}
 		
 		String username = ((User) session.getAttribute("currentUser")).getUsername();

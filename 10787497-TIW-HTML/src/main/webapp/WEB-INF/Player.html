@@ -25,7 +25,7 @@
 				<p th:text="|Artist: ${song.album.artist}|">Title</p><br>
 				<p th:text="|Album: ${song.album.title}|">Title</p><br>
 				<p th:text="|Year: ${song.album.year}|">Title</p><br>
-				<p> <a th:href="@{/goToPlaylistPage(idPlaylist=${currentPlaylist},group=1)}">
+				<p> <a th:href="@{/goToPlaylistPage(idPlaylist=${currentPlaylist}, group=${group})}">
 					<i class="arrow left"></i>
 					<b>Go Back to Playlist</b>
 					</a> 

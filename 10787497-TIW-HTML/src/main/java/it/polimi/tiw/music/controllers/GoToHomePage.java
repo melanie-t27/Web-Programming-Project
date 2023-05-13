@@ -52,6 +52,7 @@ public class GoToHomePage extends HttpServlet {
 		if (session == null || session.getAttribute("currentUser") == null) {
 			String path = getServletContext().getContextPath();
 			response.sendRedirect(path);
+			return;
 		}
 	
 		List<String> genres = Arrays.asList("Pop", "Indie", "Rock", "Alternative", "R&B");
@@ -70,14 +71,21 @@ public class GoToHomePage extends HttpServlet {
 		if(errorAddSong != null && !errorAddSong.equals("")) {
 			errorAddSong = "Something went wrong while adding a song to a playlist, please try again.";
 		}
+		System.out.println("GO TO HOMEPAGE SERVLET");
+		System.out.println(errorPlaylist);
+		System.out.println(errorNewSong);
+		System.out.println(errorNewPlaylist);
+		System.out.println(errorAddSong);
 		
 		try {
 			playlist = playlistDAO.findPlaylists(username);
 			songs = songDAO.findAllSongsByUsername(username);
 		} catch(Exception e) {
 			error = "Something went wrong, please logout and try again!";
+			System.out.println(error);
 		}
 		
+		System.out.println("processing to homepage.html");
 		String path = "/WEB-INF/HomePage.html";
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());

@@ -57,6 +57,7 @@ public class GoToPlayer extends HttpServlet{
 		if (session == null || session.getAttribute("currentUser") == null) {
 			String path = getServletContext().getContextPath();
 			response.sendRedirect(path);
+			return;
 		}
 	
 		Song song = new Song();
@@ -65,8 +66,10 @@ public class GoToPlayer extends HttpServlet{
 		String username = ((User) session.getAttribute("currentUser")).getUsername();
 		String chosenSong = request.getParameter("idSong");
 		String currentPlaylist = request.getParameter("currentPlaylist");
+		String currentGroup = request.getParameter("group");
 		int idSong = -1;
 		int idPlaylist = -1;
+		int group = -1;
 		String error = "";
 		
 		//checking inputs
@@ -76,6 +79,11 @@ public class GoToPlayer extends HttpServlet{
 			try { 
 				idSong = Integer.parseInt(chosenSong);
 				idPlaylist = Integer.parseInt(currentPlaylist);
+				group = Integer.parseInt(currentGroup);
+				if (group <= 0) {
+					group = 1;
+				}
+				
 				if(idSong <= 0 || idPlaylist <= 0) {
 					error = "Parameters invalid.";
 				} else {
@@ -125,6 +133,7 @@ public class GoToPlayer extends HttpServlet{
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		ctx.setVariable("currentPlaylist", idPlaylist);
 		ctx.setVariable("song", song);
+		ctx.setVariable("group", group);
 		templateEngine.process(path, ctx, response.getWriter());
 	}
 	

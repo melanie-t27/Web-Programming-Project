@@ -22,7 +22,6 @@ import it.polimi.tiw.music.beans.User;
 import it.polimi.tiw.music.dao.PlaylistDAO;
 import it.polimi.tiw.music.dao.SongDAO;
 
-
 public class AddSongToPlaylist extends HttpServlet{
 	private static final long serialVersionUID = 3L;
 	private Connection connection = null;
@@ -80,13 +79,13 @@ public class AddSongToPlaylist extends HttpServlet{
 				} else {
 					//check if the play-list exists
 					if(!playlistDao.isPlaylistPresent(username, idPlaylist))
-						error = "PlayList doesn't exist";
+						error = "PlayList doesn't exist.";
 					//check if the song exists
 					if(!songDao.isSongPresent(username, idSong))
-						error = "Song doesn't exist;";
+						error = "Song doesn't exist.";
 					//check if the song is already in the playList
 					if(playlistDao.isSongPresentInPlaylist(idSong, idPlaylist))
-						error = "Song already present in this playList;";
+						error = "Song already present in this playlist.";
 				}
 			} catch(NumberFormatException e) {
 				error = "Parameters submitted aren't valid, please try again!";

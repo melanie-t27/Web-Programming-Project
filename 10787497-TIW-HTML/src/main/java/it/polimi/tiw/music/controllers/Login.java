@@ -49,24 +49,26 @@ public class Login extends HttpServlet{
 	    String error = null;
 	    
 	    if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
-			error = "Parameters incomplete";
+			error = "Missing Parameters.";
 			String path = "/loginPage.html";
 			ServletContext servletContext = getServletContext();
 			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 			ctx.setVariable("error", error);
 			templateEngine.process(path, ctx, response.getWriter());
+			return;
 		}
 	    
 	    try {
 			user = userDao.checkUser(username, password);
 		} catch (SQLException e) {
-			error = "Database access failed";
+			error = "Database access failed.";
 		}
 	    if (user != null && error == null) {
 			HttpSession session = request.getSession();
 			session.setAttribute("currentUser", user);
 			String path = getServletContext().getContextPath() + "/goToHomePage";
 			response.sendRedirect(path);
+			return;
 		} else {
 			String path = "/loginPage.html";
 			ServletContext servletContext = getServletContext();
@@ -74,6 +76,7 @@ public class Login extends HttpServlet{
 			error = "Access denied, please try again!";
 			ctx.setVariable("error", error);
 			templateEngine.process(path, ctx, response.getWriter());
+			return;
 		}
 	}
 	
