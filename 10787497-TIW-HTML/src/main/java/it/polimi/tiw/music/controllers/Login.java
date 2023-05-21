@@ -73,7 +73,9 @@ public class Login extends HttpServlet{
 			String path = "/loginPage.html";
 			ServletContext servletContext = getServletContext();
 			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-			error = "Access denied, please try again!";
+			if(error==null) {
+			 error = "Access denied, please try again!";
+			}
 			ctx.setVariable("error", error);
 			templateEngine.process(path, ctx, response.getWriter());
 			return;

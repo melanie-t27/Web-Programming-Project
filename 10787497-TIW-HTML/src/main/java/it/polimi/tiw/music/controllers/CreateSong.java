@@ -77,11 +77,11 @@ public class CreateSong extends HttpServlet{
 			year = Integer.parseInt(yearString);
 			int currentYear = Calendar.getInstance().get(Calendar.YEAR);
 			if(year > currentYear) {
-				error = "Year invalid, please try again.";
+				error = "Parameter invalid, please try again.";
 				System.out.println(error);
 			}
 		} catch (NumberFormatException e) {
-			error="Year of pubblication invalid, please try again.";
+			error="Parameter invalid, please try again.";
 			System.out.println(error);
 		}
 		
@@ -104,39 +104,32 @@ public class CreateSong extends HttpServlet{
 		}
 
 		if (cover == null || cover.available()==0 || !contentTypeCover.startsWith("image/") ) { //Control of input
-			error = "Cover invalid, please try again.";
-			System.out.println(error);
+			error = "Parameter invalid, please try again.";
 		}
 		
 		if(audio == null || audio.available()==0 || !contentTypeAudio.startsWith("audio/")) {
-			error = "Audio invalid, please try again.";
-			System.out.println(error);
+			error = "Parameter invalid, please try again.";
 		}
 		
 		if(titleSong == null || titleSong.isEmpty() || titleSong.length() > 45) {
-			error = "Title song invalid, please try again";
-			System.out.println(error);
+			error = "Parameter invalid, please try again";
 		}
 		
 		List<String> genres = Arrays.asList("Pop", "Indie", "Rock", "Alternative", "R&B");
 		if(genre == null || genre.isEmpty() || !genres.contains(genre)) {
-			error = "Genre not valid, please try again.";
-			System.out.println(error);
+			error = "Parameter invalid, please try again.";
 		}
 		
 		if(titleAlbum == null || titleAlbum.isEmpty() || titleAlbum.length() > 45) {
-			error = "Title of the Album invalid, please try again.";
-			System.out.println(error);
+			error = "Parameter invalid, please try again.";
 		}
 		
 		if(artist == null || artist.isEmpty() || artist.length() > 45){
-			error = "Artist invalid, please try again.";
-			System.out.println(error);
+			error = "Parameter invalid, please try again.";
 		}
 		
 		//if parameters are invalid, forward to goToHomepage 
 		if(!error.equals("") ) {
-			System.out.println("forwarding to goToHomepage for error");
 			String path = "/goToHomePage";
 			request.setAttribute("errorNewSong", error);
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(path);
@@ -147,11 +140,8 @@ public class CreateSong extends HttpServlet{
 		//if inputs valid
 		SongDAO songDAO = new SongDAO(connection);
 		try {
-			System.out.println("Connection to database.....");
 			if(!songDAO.songAlreadyExists(username, titleSong, titleAlbum, artist)) {
-				System.out.println("Song didn't exist, adding to database....");
 				songDAO.createSongAlbum(username, titleSong, genre, audio, titleAlbum, artist, year, cover);
-				System.out.println("Song created.");
 			}
 			else {
 				error = "Song already exists.";
@@ -159,8 +149,7 @@ public class CreateSong extends HttpServlet{
 		} catch(SQLException e) {
 			error = "Something went wrong, please try later.";
 		}
-		System.out.println(error);
-		System.out.println("forwarding to goToHomepage");
+		
 		//forward to goToHomepage
 		String path = "/goToHomePage";
 		request.setAttribute("errorNewSong", error);
