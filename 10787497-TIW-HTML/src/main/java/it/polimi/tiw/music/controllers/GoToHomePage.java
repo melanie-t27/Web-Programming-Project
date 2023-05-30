@@ -71,11 +71,6 @@ public class GoToHomePage extends HttpServlet {
 		if(errorAddSong != null && !errorAddSong.equals("")) {
 			errorAddSong = "Something went wrong while adding a song to a playlist, please try again.";
 		}
-		System.out.println("GO TO HOMEPAGE SERVLET");
-		System.out.println(errorPlaylist);
-		System.out.println(errorNewSong);
-		System.out.println(errorNewPlaylist);
-		System.out.println(errorAddSong);
 		
 		try {
 			playlist = playlistDAO.findPlaylists(username);
