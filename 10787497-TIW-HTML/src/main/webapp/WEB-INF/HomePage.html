@@ -31,7 +31,9 @@
 		</div>
 	
 		<div class="content">
+			
 			<div class="half">
+			<fieldset>
 				<h2>Create a new playlist:</h2>
 				<p th:if="${errorNewPlaylist!=null && !errorNewPlaylist.isEmpty()}" class="error" th:text="${errorNewPlaylist}"></p>
 				<form action="#" th:action="@{/createPlaylist}" method="POST">
@@ -47,9 +49,13 @@
    	   				</th:block>
 					<button type="submit">Create playlist</button>
 				</form>
+				<br>
+			</fieldset>
 			</div>
+			
 	
 			<div class="half1">
+			<fieldset>
 				<h2>Create a new song:</h2>
 				<p th:if="${errorNewSong!=null && !errorNewSong.isEmpty()}" class="error" th:text="${errorNewSong}"></p>
 				<form action="#" th:action="@{/createSong}" method="POST" enctype='multipart/form-data'>
@@ -72,6 +78,8 @@
       				<input type="text" name="year" required/><br>
 					<button type="submit">Create song</button>
 				</form>
+				<br>
+			</fieldset>
 			</div>
 	
 		</div>	

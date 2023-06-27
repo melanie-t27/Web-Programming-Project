@@ -49,6 +49,8 @@
 		</table>
 	
 		<div class="content">
+		<div class="half">
+		<fieldset>
 			<h3>Add another song to your playlist:</h3>
 			<p th:if="${errorAddSong != null}" class="error" th:text="${errorAddSong}"></p>
 			<p th:if="${songsNotInPlaylist.size() == 0}">This playlist already contains all of your song.</p>
@@ -62,7 +64,10 @@
       				<br>
 					<button type="submit">Submit Song</button>
 				</form>
+				<br>
 			</th:block>
+		</fieldset>
+		</div>
 		</div>
 	
 	</div>
