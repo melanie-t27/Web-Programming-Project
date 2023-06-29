@@ -46,28 +46,4 @@ public class UserDAO {
 		return user;
 	}
 	
-	public void createUser(String username, String name, String password) throws SQLException {
-		String query = "INSERT into User (username, password, name) VALUES(?, ?, ?)";
-		
-		PreparedStatement pstatement = null;
-		try {
-			pstatement = con.prepareStatement(query);
-			pstatement.setString(1, username);
-			pstatement.setString(2, password);
-			pstatement.setString(3, name);
-			pstatement.executeUpdate();
-		} catch (SQLException e) {
-		    e.printStackTrace();
-			throw new SQLException(e);
-		} finally {
-			try {
-				pstatement.close();
-			} catch (Exception e1) {
-				throw new SQLException(e1);
-			}
-		}
-		
-	}
-	
-	
 }
