@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" version="4.0">
+  <display-name>10787497-TIW-JavaScript</display-name>
+  <context-param>
+    <param-name>dbUrl</param-name>
+    <param-value>jdbc:mysql://localhost:3306/PlayListMusicale?serverTimezone=UTC</param-value>
+  </context-param>
+  <context-param>
+    <param-name>dbUser</param-name>
+    <param-value>root</param-value>
+  </context-param>
+  <context-param>
+    <param-name>dbPassword</param-name>
+    <param-value>mt27112000</param-value>
+  </context-param>
+  <context-param>
+    <param-name>dbDriver</param-name>
+    <param-value>com.mysql.cj.jdbc.Driver</param-value>
+  </context-param>
+   <filter> 
+      <filter-name>LoginChecker</filter-name>
+      <filter-class>it.polimi.tiw.music.filters.LoginChecker</filter-class> 
+ 	</filter> 
+  <filter-mapping> 
+    <filter-name>LoginChecker</filter-name> 
+    <url-pattern>/AddSelectedSorting</url-pattern> 
+    <url-pattern>/AddSong</url-pattern> 
+    <url-pattern>/CreatePlaylist</url-pattern> 
+    <url-pattern>/CreateSong</url-pattern> 
+    <url-pattern>/GetPlaylists</url-pattern> 
+    <url-pattern>/GetSong</url-pattern>
+    <url-pattern>/GetSongs</url-pattern>
+    <url-pattern>/GetSongsInPlaylist</url-pattern>
+    <url-pattern>/GetSongsNotInPlaylist</url-pattern>
+    <url-pattern>/Logout</url-pattern> 
+    <url-pattern>/Home.html</url-pattern> 
+ </filter-mapping> 
+  
+  
+  <welcome-file-list>
+    <welcome-file>loginPage.html</welcome-file>
+  </welcome-file-list>
+  
+  
+  <servlet>
+		<servlet-name> Login </servlet-name> 
+		<servlet-class> it.polimi.tiw.music.controllers.Login </servlet-class>
+		<multipart-config>
+        	<max-file-size>16177215</max-file-size>
+        	<max-request-size>20971520</max-request-size>
+        	<file-size-threshold>5242880</file-size-threshold>
+    	</multipart-config>
+     </servlet>
+     <servlet-mapping>
+           <servlet-name> Login </servlet-name>
+           <url-pattern> /Login </url-pattern>
+     </servlet-mapping>
+     
+     <servlet>
+		<servlet-name> Logout </servlet-name> 
+		<servlet-class> it.polimi.tiw.music.controllers.Logout </servlet-class>
+     </servlet>
+     <servlet-mapping>
+           <servlet-name> Logout </servlet-name>
+           <url-pattern> /Logout </url-pattern>
+     </servlet-mapping>
+     
+     <servlet>
+		<servlet-name> GetPlaylists </servlet-name> 
+		<servlet-class> it.polimi.tiw.music.controllers.GetPlaylists </servlet-class>
+		<multipart-config>
+        	<max-file-size>16177215</max-file-size>
+        	<max-request-size>20971520</max-request-size>
+        	<file-size-threshold>5242880</file-size-threshold>
+    	</multipart-config>
+     </servlet>
+     <servlet-mapping>
+           <servlet-name> GetPlaylists </servlet-name>
+           <url-pattern> /GetPlaylists </url-pattern>
+     </servlet-mapping>
+     
+     <servlet>
+		<servlet-name> GetSong </servlet-name> 
+		<servlet-class> it.polimi.tiw.music.controllers.GetSong </servlet-class>
+		<multipart-config>
+        	<max-file-size>16177215</max-file-size>
+        	<max-request-size>20971520</max-request-size>
+        	<file-size-threshold>5242880</file-size-threshold>
+    	</multipart-config>
+     </servlet>
+     <servlet-mapping>
+           <servlet-name> GetSong </servlet-name>
+           <url-pattern> /GetSong </url-pattern>
+     </servlet-mapping>
+     
+     <servlet>
+		<servlet-name> GetSongs </servlet-name> 
+		<servlet-class> it.polimi.tiw.music.controllers.GetSongs </servlet-class>
+		<multipart-config>
+        	<max-file-size>16177215</max-file-size>
+        	<max-request-size>20971520</max-request-size>
+        	<file-size-threshold>5242880</file-size-threshold>
+    	</multipart-config>
+     </servlet>
+     <servlet-mapping>
+           <servlet-name> GetSongs </servlet-name>
+           <url-pattern> /GetSongs </url-pattern>
+     </servlet-mapping>
+     
+      <servlet>
+		<servlet-name> AddSong </servlet-name> 
+		<servlet-class> it.polimi.tiw.music.controllers.AddSong </servlet-class>
+		<multipart-config>
+        	<max-file-size>16177215</max-file-size>
+        	<max-request-size>20971520</max-request-size>
+        	<file-size-threshold>5242880</file-size-threshold>
+    	</multipart-config>
+     </servlet>
+     <servlet-mapping>
+           <servlet-name> AddSong </servlet-name>
+           <url-pattern> /AddSong </url-pattern>
+     </servlet-mapping>
+     
+     <servlet>
+		<servlet-name> CreateSong </servlet-name> 
+		<servlet-class> it.polimi.tiw.music.controllers.CreateSong </servlet-class>
+		<multipart-config>
+        	<max-file-size>16177215</max-file-size>
+        	<max-request-size>20971520</max-request-size>
+        	<file-size-threshold>5242880</file-size-threshold>
+    	</multipart-config>
+     </servlet>
+     <servlet-mapping>
+           <servlet-name> CreateSong </servlet-name>
+           <url-pattern> /CreateSong </url-pattern>
+     </servlet-mapping>
+     
+      <servlet>
+		<servlet-name> CreatePlaylist </servlet-name> 
+		<servlet-class> it.polimi.tiw.music.controllers.CreatePlaylist </servlet-class>
+		<multipart-config>
+        	<max-file-size>16177215</max-file-size>
+        	<max-request-size>20971520</max-request-size>
+        	<file-size-threshold>5242880</file-size-threshold>
+    	</multipart-config>
+     </servlet>
+     <servlet-mapping>
+           <servlet-name> CreatePlaylist </servlet-name>
+           <url-pattern> /CreatePlaylist </url-pattern>
+     </servlet-mapping>
+     
+     <servlet>
+		<servlet-name> GetSongsInPlaylist </servlet-name> 
+		<servlet-class> it.polimi.tiw.music.controllers.GetSongsInPlaylist </servlet-class>
+		<multipart-config>
+        	<max-file-size>16177215</max-file-size>
+        	<max-request-size>20971520</max-request-size>
+        	<file-size-threshold>5242880</file-size-threshold>
+    	</multipart-config>
+     </servlet>
+     <servlet-mapping>
+           <servlet-name> GetSongsInPlaylist </servlet-name>
+           <url-pattern> /GetSongsInPlaylist </url-pattern>
+     </servlet-mapping>
+     
+     <servlet>
+		<servlet-name> GetSongsNotInPlaylist </servlet-name> 
+		<servlet-class> it.polimi.tiw.music.controllers.GetSongsNotInPlaylist </servlet-class>
+		<multipart-config>
+        	<max-file-size>16177215</max-file-size>
+        	<max-request-size>20971520</max-request-size>
+        	<file-size-threshold>5242880</file-size-threshold>
+    	</multipart-config>
+     </servlet>
+     <servlet-mapping>
+           <servlet-name> GetSongsNotInPlaylist </servlet-name>
+           <url-pattern> /GetSongsNotInPlaylist </url-pattern>
+     </servlet-mapping>
+     
+     <servlet>
+		<servlet-name> AddSelectedSorting </servlet-name> 
+		<servlet-class> it.polimi.tiw.music.controllers.AddSelectedSorting </servlet-class>
+		<multipart-config>
+        	<max-file-size>16177215</max-file-size>
+        	<max-request-size>20971520</max-request-size>
+        	<file-size-threshold>5242880</file-size-threshold>
+    	</multipart-config>
+     </servlet>
+     <servlet-mapping>
+           <servlet-name> AddSelectedSorting </servlet-name>
+           <url-pattern> /AddSelectedSorting </url-pattern>
+     </servlet-mapping>
+     
+     
+</web-app>

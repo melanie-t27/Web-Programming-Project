@@ -1,0 +1,475 @@
+@charset "UTF-8";
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	text-decoration: none;
+	list-style: none;
+	font-family: "Roboto", sans-serif;
+}
+
+.flex {
+	display : flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.text-center {
+	text-align: center!important;
+}
+
+.text-center h2 {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.text-center .error {
+	color: red;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.text-center h1 {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+body {
+	background-color: rgba(255,255,255,0.87);
+}
+
+h1 {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.container {
+	width: 100%;
+	height: 100%;
+}
+
+
+/* header style */
+header {
+	width: 100%;
+	padding: 20px;
+	height: 120px;
+	justify-content: space-around!important;
+	background-color: white;
+}
+
+header .logo img {
+	width: 50px;
+	height: 50px;
+	border-radius:10px;
+}
+
+header h1 {
+	padding-top: 10px;
+	padding-left: 5px;
+	color: #252525;
+}
+
+header h1 span {
+	color: #93221f;
+}
+
+header ul {
+	margin-top: 10px;
+	color: #252525;
+}
+
+header ul li {
+	padding: 5px 20px;
+	margin: 10px;
+	transition: all 0.5s;
+	color: #252525;
+}
+
+header ul li a {
+	color: #252525;
+	font-size:20px;
+	font-weight: 600;
+	transition: color ease-out 0.6;
+}
+
+header ul li a:hover {
+	color: #d1595A;
+}
+
+/* content in page */
+.container .content {
+	width: 95%;
+	padding: 20px;
+	margin-left: 40px;
+}
+
+.container .content h2 {
+	padding: 10px;
+	color: #252525
+}
+
+.container .content h3 {
+	padding: 10px;
+	color: #252525;
+}
+
+.container .content p {
+	padding: 10px;
+	margin-left: 5px;
+}
+
+.container .content a {
+	color: black;
+}
+
+.container .content .error {
+	color: red;
+}
+
+.container .content ul li {
+	padding: 10px;
+	margin-left: 20px;
+	border-bottom: 1px solid #ddd;
+}
+
+.container .content ul li button {
+	margin-left: 15px;
+	border: none;
+	outline: none;
+	border-radius: 10px;
+	margin-top: 10px;
+	padding: 3px 10px;
+	background: grey;
+	color: #fff;
+	border: #fff;
+	font-size: 15px;
+}
+
+.container .content ul li button:hover {
+	background: #93221f; 
+}
+
+.container .content ul li a {
+	color: black;
+}
+
+.container .content ul li a:hover{
+	color: #d1595a; 
+}
+
+.container .content ul li small {
+	color: grey;
+	margin-left: 5px;
+}
+
+.container .content form {
+	margin-left:20px;
+} 
+
+.container .content input[type="button"] {
+	border: none;
+	outline: none;
+	border-radius: 10px;
+	margin-top: 10px;
+	padding: 3px 20px;
+	font-size: 17px;
+  	background: grey;
+ 	color: #fff;
+  	border: #fff;
+}
+
+.container .content input[type="button"]:hover {
+	background: #93221f; 
+}
+
+.container .content select {
+	border-radius: 10px;
+	margin-top: 10px;
+	margin-left: 3px;
+	padding: 3px 20px;
+	font-size: 13px;
+}
+
+.container .content label{
+	font-style: italic;
+}
+
+
+.container .content .half {
+	float: left;
+	width: 50%; 
+	padding: 5%
+
+}
+
+.container .content .half1 {
+	float: left;
+	width: 45%; 
+	padding: 5%
+
+}
+
+.container .content .half form {
+	margin-left:20px;
+} 
+
+.container .content .half1 form {
+	margin-left:20px;
+}
+
+.container .content .half label{
+	font-style: italic;
+}
+
+.container .content .half label span{
+	font-size: 10px;
+}
+
+.container .content .half .song{
+	font-style: normal;
+}
+
+.container .content .half1 label{
+	font-style: italic;
+}
+
+
+.container .content .half input[type="button"] {
+	border: none;
+	outline: none;
+	border-radius: 10px;
+	margin-top: 10px;
+	padding: 3px 20px;
+	font-size: 17px;
+  	background: grey;
+ 	color: #fff;
+  	border: #fff;
+}
+
+.container .content .half1 input[type="button"] {
+	border: none;
+	outline: none;
+	border-radius: 10px;
+	margin-top: 10px;
+	padding: 3px 20px;
+	font-size: 17px;
+  	background: grey;
+ 	color: #fff;
+  	border: #fff;
+}
+
+.container .content .half input[type="button"]:hover {
+	background: #93221f; 
+}
+
+.container .content .half1 input[type="button"]:hover {
+	background: #93221f; 
+}
+
+.container .content .half input[type="text"] {
+  	top: 0;
+  	left: 0;
+  	border: 1px solid grey;
+  	padding: 5px;
+  	margin: 5px;
+  	border-radius: 10px;
+  	font-size: 15px;
+}
+
+.container .content .half input[type="checkbox"] {
+  	top: 0;
+  	left: 0;
+  	border: 1px solid grey;
+  	margin: 7px;
+  	border-radius: 10px;
+}
+
+.container .content .half1 input[type="text"] {
+  	top: 0;
+  	left: 0;
+  	border: 1px solid grey;
+  	padding: 5px;
+  	margin: 5px;
+  	border-radius: 10px;
+  	font-size: 15px;
+}
+
+.container .content .half1 input[type="file"]{
+	border-radius: 10px;
+	margin-top: 10px;
+	padding: 3px 20px;
+	font-size: 13px;
+}
+
+.container .content .hal1 select {
+	border-radius: 10px;
+	margin-top: 10px;
+	padding: 3px 20px;
+	font-size: 13px;
+}
+
+.container .content .half .error {
+	color: red;
+}
+
+.container .content .half1 .error {
+	color: red;
+}
+
+.container .content .half .player {
+	float: right;
+	margin-right: 0px;
+	margin: auto;
+    text-align: center;
+}
+
+
+.container .content .half .player img {
+	width: 70%;
+    height: auto;
+    object-fit: contain;
+}
+
+.container .content .half .player audio {
+	padding: 7px;
+	align-content: right;
+}
+
+
+
+/* FORM LOGIN */
+.form-login {
+	width: 100%;
+	max-width: 330px;
+	margin:auto;
+	position: relative;
+  	padding: 50px 50px;
+ 	background: white;
+  	border-radius: 10px;
+}
+
+.form-login label{
+	font-size: 20px;
+}
+
+.form-login .input {
+	position: relative;
+  	width: 230px;
+  	height: 50px;
+  	margin-bottom: 30px;
+  	margin-top: 10px;
+}
+
+.form-login .input input {
+	position: absolute;
+  	top: 0;
+  	left: 0;
+  	width: 100%;
+  	border: 2px solid grey;
+  	outline: none;
+  	background: none;
+  	padding: 10px;
+  	border-radius: 10px;
+  	font-size: 1.2em;
+}
+
+.form-login .input:last-child {
+  margin-bottom: 0;
+}
+
+.form-login input[type="button"] {
+	padding: 4px 20px;
+	border: none;
+	outline: none;
+	border-radius: 10px;
+	margin-top: 10px;
+	padding: 3px 20px;
+	font-size: 20px;
+  	background: grey;
+ 	color: #fff;
+  	border: #fff;
+}
+
+.form-login input[type="button"]:hover{
+	background: #93221f; 
+}
+
+/*Play-list Page */
+
+table {
+	margin-left: auto;
+	margin-right: auto;
+	border-spacing: 20px;
+}
+
+table tr td {
+	background: white;
+	padding: 30px;
+	text-align: center;
+	
+}
+
+table tr td img {
+	margin-left: auto;
+  	margin-right: auto;
+  	border-radius: 5px;
+}
+
+table tr td a span {
+	color: black;
+	text-align: center;
+}
+
+table tr td a span:hover {
+	color: #d1595A;
+}
+
+table tr td b {
+	color: #252525;
+}
+
+.arrow {
+  border: solid #252525;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+}
+
+.right {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+.left {
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+}
+
+.container .content .slist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.container .content .slist li {
+  margin: 10px;
+  padding: 15px;
+  border: 1px solid grey;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.87);
+}
+
+/* (B) DRAG-AND-DROP HINT */
+.container .content .slist li.hint {
+  border: 1px solid #abacac;
+  border-radius: 10px;
+  background: rgba(0,0,0,0.1);
+}
+
+.container .content .slist li.active {
+  border: 1px solid grey;
+  border-radius: 10px;
+  background: #ffe7e7;
+}
+

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title> Home </title>
+		
+		<link rel="stylesheet" type="text/css" media="all" href="CSS/mystyle.css" />
+		<script src="JavaScript/utils.js"             charset="utf-8" defer></script>
+		<script src="JavaScript/sorting.js"        charset="utf-8" defer></script>
+		<script src="JavaScript/addSelectedSorting.js"           charset="utf-8" defer></script>
+		<script src="JavaScript/home.js"   charset="utf-8" defer></script>
+		<script src="JavaScript/createPlaylist.js"    charset="utf-8" defer></script>
+		<script src="JavaScript/createSong.js"        charset="utf-8" defer></script>
+		<script src="JavaScript/addSong.js"           charset="utf-8" defer></script>
+		
+		<link rel="shortcut icon" href="logo.jpeg" />
+	</head>
+
+	<body class="container">
+		<header class="flex">
+		<div class="logo flex">
+			<img src="logo.jpeg" alt="">
+			<h1>Welcome <span id="username"></span></h1>
+		</div> 
+     
+		<ul class="flex" >
+			<li class="HomePage"><a href="Home">HomePage</a></li>
+			<li class="logout"><a href="Logout">LogOut</a></li>
+		</ul>
+		</header>
+	
+		
+		<div class="content">
+		<div class="homePage" id="homePage">
+			<h2>Your playlists:</h2>
+			<p id="playlistListMessage">
+			<p class="error" id="playlistListError">
+			<ul id="playlistList" class="playlistList">
+  				
+			</ul>
+		
+	
+		<div class="content">	
+			<div class="half">
+			<fieldset class="createPlaylistField">
+			<h2>Create a new playlist:</h2>
+			<p class = "error" id="createPlaylistError"></p>
+				<form action="#" id="createPlaylist">
+				</form>
+				<br>
+			</fieldset>
+			</div>
+			
+			<div class="half1">
+			<fieldset class="createSongField">
+			<h2>Create a new song:</h2>
+			<p class = "error" id="songError">
+				<form action="#">
+					<label for="title">Title of the song </label>
+					<input type="text" id="title" name="title" required><br>
+					<label for="genre">Genre</label> 
+						<select id="genre" name="genre" required>
+							<option selected> --- </option>
+							<option value="Dance"> Dance </option>
+							<option value="Pop">   Pop   </option>
+							<option value="Rap">   Rap   </option>
+							<option value="Rock">  Rock  </option>
+							<option value="Alternative">  Alternative  </option>
+						</select><br>
+					<label for="albumTitle">Title of the album </label>
+					<input type="text" id="albumTitle" name="albumTitle" required><br>
+					<label for="artist">Artist </label>
+					<input type="text" id="artist" name="artist" required><br>
+					<label for="year">Year of publication </label>
+					<input type="number" id="year" name="year" required><br>
+					<label for="cover">Cover</label>
+					<input type="file" id="cover" name="cover" accept="image/*" required><br>
+					<label for="audio">Audio of the song </label>
+					<input type="file" id="audio" name="audio" accept="audio/*" required><br>
+					<input type="button" id="createSongButton" value="submit"><br>
+				</form>
+				<br>
+			</fieldset>
+			</div>
+		</div>
+		</div>
+		</div>
+		<br>
+			
+		<div id="playlistPage">
+		<div class="content">
+			<h2 id="playlistNameMessage"></h2>
+			<p class="error" id="errorSongsInPlaylist">
+			<table>
+				<tbody id="SongsInPlaylist">
+				</tbody>
+			</table>
+			<fieldset>
+			<h3>Add another song to your playlist:</h3>
+			<p class="error" id="addSongError"></p>
+			<p id="addSongMessage"></p>
+			
+				<form action="#" id="addSongToPLayListForm">
+					<select id="addSongToPlayList" name="addSongToPlayList" required>
+	    				<option selected>---</option>
+        				
+      				</select>
+      				<br>
+					<input type="button" id="addSongButton" value="Submit Song">
+				</form>
+				<br>
+			</fieldset>
+		</div>
+		</div>
+		
+		<div class="songPage" id="songPage">
+			<div class="content">
+			<p id="songPageError"></p>
+			<div class="half">
+				<div class="player" id="player">
+				
+				</div>
+			</div>
+			<div class="half" id="songData">
+				
+			</div>
+			</div>
+		</div>
+		
+		<div class="sortingPage" id="sortingPage">
+			<div class="content">
+				<h2>Please sort your playlist:</h2>
+				<p class="error" id="sortingError">
+				<ul id="sortlist">
+				</ul>
+				<input type="button" id="addSortingButton" value="Save"></input>
+			</div>
+		</div>
+		
+	</body>
+
+</html>
